@@ -1,67 +1,97 @@
-import React from "react";
-import { Link, useNavigate } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import "../styles/Navbar.css";
 
-function Navbar() {
+function Navbar(){
 
-  const navigate = useNavigate();
+const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-  // check login token
-  const token = localStorage.getItem("token");
+useEffect(()=>{
 
-  // logout function
-  const handleLogout = () => {
-    localStorage.removeItem("token");
-    navigate("/login");
-  };
+const token = localStorage.getItem("token");
 
-  return (
-    <nav className="navbar">
+if(token){
+setIsLoggedIn(true);
+}
 
-      {/* Logo */}
-      <div className="navbar-logo">
-        <h2>ANGANCARE</h2>
-      </div>
+},[]);
 
-      {/* Menu Links */}
-      <ul className="navbar-links">
-        <li><Link to="/">Home</Link></li>
-        <li><Link to="/attendance">Attendance</Link></li>
-        <li><Link to="/growth">Growth</Link></li>
-        <li><Link to="/report">Report</Link></li>
-        <li><Link to="/notification">Notification</Link></li>
-        <li><Link to="/profile">Profile</Link></li>
-      </ul>
 
-      {/* Buttons */}
-      <div className="navbar-buttons">
+const handleLogout = ()=>{
 
-        {/* Show Get Started only if NOT logged in */}
-        {!token && (
-          <Link to="/register">
-            <button className="get-started">
-              Get Started
-            </button>
-          </Link>
-        )}
+localStorage.removeItem("token");
 
-        {/* Login / Logout */}
-        {token ? (
-          <button className="login-btn" onClick={handleLogout}>
-            Logout
-          </button>
-        ) : (
-          <Link to="/login">
-            <button className="login-btn">
-              Login
-            </button>
-          </Link>
-        )}
+setIsLoggedIn(false);
 
-      </div>
+window.location.href="/";
 
-    </nav>
-  );
+};
+
+
+return(
+
+<nav className="navbar">
+
+<div className="logo">
+ANGANCARE
+</div>
+
+<ul className="nav-links">
+
+<li><Link to="/">Home</Link></li>
+
+<li><Link to="/attendance">Attendance</Link></li>
+
+<li><Link to="/growth">Growth</Link></li>
+
+<li><Link to="/report">Report</Link></li>
+
+<li><Link to="/notification">Notification</Link></li>
+
+<li><Link to="/profile">Profile</Link></li>
+
+</ul>
+
+<div className="nav-buttons">
+
+{/* BEFORE LOGIN */}
+
+{!isLoggedIn && (
+
+<>
+
+<Link to="/teacher-register">
+<button className="start-btn">
+Get Started
+</button>
+</Link>
+
+<Link to="/login">
+<button className="login-btn">
+Login
+</button>
+</Link>
+
+</>
+
+)}
+
+{/* AFTER LOGIN */}
+
+{isLoggedIn && (
+
+<button className="login-btn" onClick={handleLogout}>
+Logout
+</button>
+
+)}
+
+</div>
+
+</nav>
+
+)
+
 }
 
 export default Navbar;
