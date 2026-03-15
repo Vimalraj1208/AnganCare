@@ -6,10 +6,10 @@ function Navbar() {
 
   const navigate = useNavigate();
 
-  // Check login token
+  // check login token
   const token = localStorage.getItem("token");
 
-  // Logout function
+  // logout function
   const handleLogout = () => {
     localStorage.removeItem("token");
     navigate("/login");
@@ -17,10 +17,13 @@ function Navbar() {
 
   return (
     <nav className="navbar">
+
+      {/* Logo */}
       <div className="navbar-logo">
         <h2>ANGANCARE</h2>
       </div>
 
+      {/* Menu Links */}
       <ul className="navbar-links">
         <li><Link to="/">Home</Link></li>
         <li><Link to="/attendance">Attendance</Link></li>
@@ -30,12 +33,15 @@ function Navbar() {
         <li><Link to="/profile">Profile</Link></li>
       </ul>
 
+      {/* Buttons */}
       <div className="navbar-buttons">
 
-        {/* Show only if NOT logged in */}
+        {/* Show Get Started only if NOT logged in */}
         {!token && (
           <Link to="/register">
-            <button className="get-started">Get Started</button>
+            <button className="get-started">
+              Get Started
+            </button>
           </Link>
         )}
 
@@ -46,11 +52,14 @@ function Navbar() {
           </button>
         ) : (
           <Link to="/login">
-            <button className="login-btn">Login</button>
+            <button className="login-btn">
+              Login
+            </button>
           </Link>
         )}
 
       </div>
+
     </nav>
   );
 }

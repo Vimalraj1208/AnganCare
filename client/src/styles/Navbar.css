@@ -1,7 +1,7 @@
 .navbar{
 display:flex;
-justify-content:space-between;
 align-items:center;
+justify-content:space-between;
 padding:15px 40px;
 background:linear-gradient(90deg,#2a5bd7,#2ea0ff);
 color:white;
@@ -12,44 +12,52 @@ font-size:22px;
 font-weight:bold;
 }
 
+/* MENU */
 .navbar-links{
 display:flex;
+align-items:center;
 gap:25px;
+list-style:none;
+margin:0;
+padding:0;
+}
+
+.navbar-links li{
 list-style:none;
 }
 
-.navbar-links li a{
+.navbar-links a{
 text-decoration:none;
 color:white;
 font-weight:500;
 }
 
-.navbar-links li a:hover{
-text-decoration:underline;
-}
-
+/* BUTTON AREA */
 .navbar-buttons{
 display:flex;
+align-items:center;
 gap:10px;
 }
 
+/* GET STARTED */
 .get-started{
 background:#ffd54f;
 border:none;
 padding:8px 15px;
-border-radius:5px;
-cursor:pointer;
+border-radius:6px;
 font-weight:600;
+cursor:pointer;
 }
 
+/* LOGIN */
 .login-btn{
 background:#3b82f6;
 border:none;
 padding:8px 15px;
-border-radius:5px;
+border-radius:6px;
 color:white;
-cursor:pointer;
 font-weight:600;
+cursor:pointer;
 }
 
 .login-btn:hover{
