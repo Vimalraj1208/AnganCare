@@ -1,231 +1,44 @@
-import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import "./Login.css";
-import bgImage from "../assets/bg.jpg";
+import React from "react";
+import Lottie from "lottie-react";
+import loginAnimation from "../assets/loginAnimation.json";
+import "../pages/Login.css";
 
-
-const Login = () => {
-
-  const navigate = useNavigate();
-
-  const [form, setForm] = useState({
-    username: "",
-    password: ""
-  });
-
-  const [showPassword, setShowPassword] = useState(false);
-
-  const [captcha, setCaptcha] = useState("");
-  const [userCaptcha, setUserCaptcha] = useState("");
-
-  // ======================
-  // GENERATE CAPTCHA
-  // ======================
-
-  const generateCaptcha = () => {
-
-    const chars =
-      "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-
-    let newCaptcha = "";
-
-    for (let i = 0; i < 6; i++) {
-      newCaptcha += chars.charAt(
-        Math.floor(Math.random() * chars.length)
-      );
-    }
-
-    setCaptcha(newCaptcha);
-
-  };
-
-  // ======================
-  // VOICE CAPTCHA
-  // ======================
-
-  const speakCaptcha = () => {
-
-    const speech = new SpeechSynthesisUtterance(captcha);
-    speech.lang = "en-US";
-    window.speechSynthesis.speak(speech);
-
-  };
-
-  useEffect(() => {
-    generateCaptcha();
-  }, []);
-
-  // ======================
-  // HANDLE INPUT
-  // ======================
-
-  const handleChange = (e) => {
-
-    setForm({
-      ...form,
-      [e.target.name]: e.target.value
-    });
-
-  };
-
-  // ======================
-  // LOGIN FUNCTION
-  // ======================
-
-  const handleLogin = async (e) => {
-
-    e.preventDefault();
-
-    if (userCaptcha !== captcha) {
-      alert("Captcha incorrect!");
-      generateCaptcha();
-      return;
-    }
-
-    try {
-
-      const res = await fetch(
-        "http://localhost:5000/api/auth/login",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify({
-            username: form.username,
-            password: form.password
-          })
-        }
-      );
-
-      const data = await res.json();
-
-      if (res.ok) {
-
-        alert("Login Successful");
-
-        localStorage.setItem("username", form.username);
-        localStorage.setItem("token", data.token);
-
-        // Redirect to dashboard / home
-        navigate("/");
-
-      } else {
-
-        alert(data.message);
-
-      }
-
-    } catch {
-
-      alert("Server Error");
-
-    }
-
-  };
-
+function Login() {
   return (
-    
+    <div className="login-page">
 
-    <div
-      className="login-container"
-      style={{ background:"white" }}
-    >
+      {/* Animation Background */}
+      <div className="animation-bg">
+        <Lottie animationData={loginAnimation} loop={true}/>
+      </div>
 
-      <div className="login-box">
+      {/* Floating Login Form */}
+      <div className="login-card">
 
-        <h2>LOGIN</h2>
+        <h2>Login</h2>
 
-        <form onSubmit={handleLogin}>
+        <input type="text" placeholder="Username"/>
 
-          <input
-            type="text"
-            name="username"
-            placeholder="Username"
-            value={form.username}
-            onChange={handleChange}
-            required
-          />
-          
+        <input type="password" placeholder="Password"/>
 
-          <div className="password-wrapper">
+        <div className="captcha-row">
+          <span className="captcha-text">A3fK9</span>
+          <button className="captcha-btn">↻</button>
+          <button className="captcha-btn">🔊</button>
+        </div>
 
-            <input
-              type={showPassword ? "text" : "password"}
-              name="password"
-              placeholder="Password"
-              value={form.password}
-              onChange={handleChange}
-              required
-            />
+        <input type="text" placeholder="Enter Captcha"/>
 
-            <span
-              className="eye-icon"
-              onClick={() => setShowPassword(!showPassword)}
-            >
-              {showPassword ? "👁️‍🗨️" : "👁️"}
-            </span>
+        <button className="login-btn">Login</button>
 
-          </div>
-
-          {/* CAPTCHA */}
-
-          <div className="captcha-box">
-
-            <span className="captcha-text">
-              {captcha}
-            </span>
-
-            <div>
-
-              <button type="button" onClick={generateCaptcha}>
-                ⟳
-              </button>
-
-              <button type="button" onClick={speakCaptcha}>
-                🔊
-              </button>
-
-            </div>
-
-          </div>
-
-          <input
-            type="text"
-            placeholder="Enter Captcha"
-            value={userCaptcha}
-            onChange={(e) => setUserCaptcha(e.target.value)}
-            required
-          />
-
-          <button className="login-btn" type="submit">
-            LOGIN
-          </button>
-
-        </form>
-
-        {/* REGISTER NAVIGATION */}
-
-        <p style={{ marginTop: "15px", textAlign: "center" }}>
-          New user?{" "}
-          <span
-            style={{
-              color: "#2575fc",
-              cursor: "pointer",
-              fontWeight: "bold"
-            }}
-            onClick={() => navigate("/teacher-register")}
-          >
-            Register here
-          </span>
+        <p className="register-link">
+          New user? <span>Register here</span>
         </p>
 
       </div>
 
     </div>
-
   );
-
-};
+}
 
 export default Login;
