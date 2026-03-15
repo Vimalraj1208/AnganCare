@@ -1,101 +1,58 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
-import { FaLock } from "react-icons/fa";
+import { Link, useNavigate } from "react-router-dom";
 import "../styles/Navbar.css";
 
 function Navbar() {
 
-const navigate = useNavigate();
+  const navigate = useNavigate();
 
-const token = localStorage.getItem("token");
+  // Check login token
+  const token = localStorage.getItem("token");
 
-const handleProtected = (path) => {
+  // Logout function
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    navigate("/login");
+  };
 
-if(!token){
-alert("Please login first");
-navigate("/login");
-}
-else{
-navigate(path);
-}
+  return (
+    <nav className="navbar">
+      <div className="navbar-logo">
+        <h2>ANGANCARE</h2>
+      </div>
 
-};
+      <ul className="navbar-links">
+        <li><Link to="/">Home</Link></li>
+        <li><Link to="/attendance">Attendance</Link></li>
+        <li><Link to="/growth">Growth</Link></li>
+        <li><Link to="/report">Report</Link></li>
+        <li><Link to="/notification">Notification</Link></li>
+        <li><Link to="/profile">Profile</Link></li>
+      </ul>
 
-return(
+      <div className="navbar-buttons">
 
-<nav className="navbar">
+        {/* Show only if NOT logged in */}
+        {!token && (
+          <Link to="/register">
+            <button className="get-started">Get Started</button>
+          </Link>
+        )}
 
-{/* LOGO */}
+        {/* Login / Logout */}
+        {token ? (
+          <button className="login-btn" onClick={handleLogout}>
+            Logout
+          </button>
+        ) : (
+          <Link to="/login">
+            <button className="login-btn">Login</button>
+          </Link>
+        )}
 
-<div className="logo">
-ANGANCARE
-</div>
-
-
-{/* NAV LINKS */}
-
-<ul className="nav-links">
-
-<li onClick={()=>navigate("/")}>Home</li>
-
-<li onClick={()=>handleProtected("/attendance")}>
-Attendance
-</li>
-
-<li onClick={()=>handleProtected("/growth")}>
-Growth
-</li>
-
-<li onClick={()=>handleProtected("/report")}>
-Report
-</li>
-
-<li onClick={()=>handleProtected("/notification")}>
-Notification
-</li>
-
-<li onClick={()=>handleProtected("/profile")}>
-Profile
-</li>
-
-</ul>
-
-
-{/* BUTTONS */}
-
-<div className="nav-buttons">
-
-<button
-className="get-started"
-onClick={()=>navigate("/teacher-register")}
->
-Get Started
-</button>
-
-{token ? (
-
-<div className="logged">
-<FaLock className="lock-icon"/>
-Logged In
-</div>
-
-) : (
-
-<button
-className="login-btn"
-onClick={()=>navigate("/login")}
->
-Login
-</button>
-
-)}
-
-</div>
-
-</nav>
-
-);
-
+      </div>
+    </nav>
+  );
 }
 
 export default Navbar;
