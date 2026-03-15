@@ -8,11 +8,25 @@ const TeacherRegister = () => {
 
 const navigate = useNavigate();
 
+/* =========================
+STATE VARIABLES
+========================= */
+
+const [aadhaar,setAadhaar] = useState("");
+const [name,setName] = useState("");
+const [phone,setPhone] = useState("");
+const [email,setEmail] = useState("");
+const [username,setUsername] = useState("");
+const [password,setPassword] = useState("");
+const [confirmPassword,setConfirmPassword] = useState("");
+
 const [captcha,setCaptcha] = useState("");
 const [userCaptcha,setUserCaptcha] = useState("");
 
+/* =========================
+GENERATE CAPTCHA
+========================= */
 
-// generate captcha
 const generateCaptcha = () => {
 
 const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
@@ -29,8 +43,10 @@ setCaptcha(newCaptcha);
 
 };
 
+/* =========================
+VOICE CAPTCHA
+========================= */
 
-// voice captcha
 const speakCaptcha = () => {
 
 const speech = new SpeechSynthesisUtterance(captcha.split("").join(" "));
@@ -41,15 +57,20 @@ window.speechSynthesis.speak(speech);
 
 };
 
+/* =========================
+PAGE LOAD CAPTCHA
+========================= */
 
-// generate captcha on page load
 useEffect(()=>{
 generateCaptcha();
 },[]);
 
 
-// register function
-const handleRegister = () => {
+/* =========================
+REGISTER FUNCTION
+========================= */
+
+const handleRegister = async () => {
 
 if(userCaptcha !== captcha){
 
@@ -61,12 +82,65 @@ return;
 
 }
 
+if(password !== confirmPassword){
+
+alert("Passwords do not match");
+
+return;
+
+}
+
+try{
+
+const res = await fetch("http://localhost:5000/api/auth/register",{
+
+method:"POST",
+
+headers:{
+"Content-Type":"application/json"
+},
+
+body:JSON.stringify({
+
+aadhaar,
+name,
+phone,
+email,
+username,
+password
+
+})
+
+});
+
+const data = await res.json();
+
+if(data.success){
+
 alert("Registration Successful");
 
 navigate("/login");
 
+}else{
+
+alert(data.message || "Registration failed");
+
+}
+
+}catch(err){
+
+console.error(err);
+
+alert("Server error");
+
+}
+
 };
 
+
+/* =========================
+UI
+========================= */
 
 return(
 
@@ -95,19 +169,49 @@ className="animation"
 
 <h2>Teacher Register</h2>
 
-<input placeholder="Aadhaar Number"/>
+<input
+placeholder="Aadhaar Number"
+value={aadhaar}
+onChange={(e)=>setAadhaar(e.target.value)}
+/>
 
-<input placeholder="Full Name"/>
+<input
+placeholder="Full Name"
+value={name}
+onChange={(e)=>setName(e.target.value)}
+/>
 
-<input placeholder="Phone Number"/>
+<input
+placeholder="Phone Number"
+value={phone}
+onChange={(e)=>setPhone(e.target.value)}
+/>
 
-<input placeholder="Email"/>
+<input
+placeholder="Email"
+value={email}
+onChange={(e)=>setEmail(e.target.value)}
+/>
 
-<input placeholder="Username"/>
+<input
+placeholder="Username"
+value={username}
+onChange={(e)=>setUsername(e.target.value)}
+/>
 
-<input type="password" placeholder="Password"/>
+<input
+type="password"
+placeholder="Password"
+value={password}
+onChange={(e)=>setPassword(e.target.value)}
+/>
 
-<input type="password" placeholder="Retype Password"/>
+<input
+type="password"
+placeholder="Retype Password"
+value={confirmPassword}
+onChange={(e)=>setConfirmPassword(e.target.value)}
+/>
 
 
 {/* CAPTCHA */}
@@ -120,9 +224,13 @@ className="animation"
 
 </div>
 
-<button onClick={generateCaptcha}>🔄</button>
+<button onClick={generateCaptcha}>
+🔄
+</button>
 
-<button onClick={speakCaptcha}>🔊</button>
+<button onClick={speakCaptcha}>
+🔊
+</button>
 
 </div>
 
@@ -134,7 +242,10 @@ onChange={(e)=>setUserCaptcha(e.target.value)}
 />
 
 
-<button className="register-btn" onClick={handleRegister}>
+<button
+className="register-btn"
+onClick={handleRegister}
+>
 
 Register
 
@@ -143,7 +254,7 @@ Register
 
 <p className="login-link">
 
-Already have an account?  
+Already have an account?
 
 <span onClick={()=>navigate("/login")}>
 

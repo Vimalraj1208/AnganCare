@@ -1,29 +1,46 @@
-import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import "../styles/Navbar.css";
 
-function Navbar(){
+function Navbar() {
 
-const [isLoggedIn, setIsLoggedIn] = useState(false);
+const navigate = useNavigate();
+
+const [user,setUser] = useState(null);
 
 useEffect(()=>{
 
-const token = localStorage.getItem("token");
+const storedUser = JSON.parse(localStorage.getItem("user"));
 
-if(token){
-setIsLoggedIn(true);
+if(storedUser){
+setUser(storedUser);
 }
 
 },[]);
 
 
-const handleLogout = ()=>{
+const handleNavigate = (path)=>{
 
-localStorage.removeItem("token");
+if(!user){
 
-setIsLoggedIn(false);
+navigate("/login");
 
-window.location.href="/";
+}else{
+
+navigate(path);
+
+}
+
+};
+
+
+const logout = ()=>{
+
+localStorage.removeItem("user");
+
+setUser(null);
+
+navigate("/");
 
 };
 
@@ -32,57 +49,72 @@ return(
 
 <nav className="navbar">
 
-<div className="logo">
+<div className="logo" onClick={()=>navigate("/")}>
 ANGANCARE
 </div>
 
+
 <ul className="nav-links">
 
-<li><Link to="/">Home</Link></li>
+<li onClick={()=>navigate("/")}>Home</li>
 
-<li><Link to="/attendance">Attendance</Link></li>
+<li onClick={()=>handleNavigate("/attendance")}>Attendance</li>
 
-<li><Link to="/growth">Growth</Link></li>
+<li onClick={()=>handleNavigate("/growth")}>Growth</li>
 
-<li><Link to="/report">Report</Link></li>
+<li onClick={()=>handleNavigate("/report")}>Report</li>
 
-<li><Link to="/notification">Notification</Link></li>
+<li onClick={()=>handleNavigate("/notification")}>Notification</li>
 
-<li><Link to="/profile">Profile</Link></li>
+<li onClick={()=>handleNavigate("/profile")}>Settings</li>
 
 </ul>
 
+
 <div className="nav-buttons">
 
-{/* BEFORE LOGIN */}
+{user ? (
 
-{!isLoggedIn && (
+<div className="user-box">
+
+<span className="username">
+{user.username}
+</span>
+
+<button
+className="logout-btn"
+onClick={logout}
+>
+
+Logout
+
+</button>
+
+</div>
+
+) : (
 
 <>
 
-<Link to="/teacher-register">
-<button className="start-btn">
-Get Started
-</button>
-</Link>
+<button
+className="start-btn"
+onClick={()=>navigate("/teacher-register")}
+>
 
-<Link to="/login">
-<button className="login-btn">
-Login
+Get Started
+
 </button>
-</Link>
+
+<button
+className="login-btn"
+onClick={()=>navigate("/login")}
+>
+
+Login
+
+</button>
 
 </>
-
-)}
-
-{/* AFTER LOGIN */}
-
-{isLoggedIn && (
-
-<button className="login-btn" onClick={handleLogout}>
-Logout
-</button>
 
 )}
 
@@ -90,7 +122,7 @@ Logout
 
 </nav>
 
-)
+);
 
 }
 

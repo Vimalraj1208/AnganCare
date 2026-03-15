@@ -1,91 +1,90 @@
-import React, { useState } from "react";
-import "../styles/Attendance.css";
-import FaceCapture from "../components/FaceCapture";
-import AddStudentModal from "../components/AddStudentModal";
-import AttendanceDashboard from "../components/AttendanceDashboard";
-import StudentsList from "../components/StudentsList";
+import React from "react";
+import { useNavigate } from "react-router-dom";
+import "../styles/Dashboard.css";
 
 function Attendance() {
 
-  const [showAddStudent, setShowAddStudent] = useState(false);
-  const [activeFeature, setActiveFeature] = useState(null);
+const navigate = useNavigate();
 
-  const openFeature = (feature) => {
-    setActiveFeature(feature);
-  };
+return (
 
-  return (
+<div className="attendance-page">
 
-    <div className="attendance-page">
+<h2 className="attendance-title">
+Attendance Management
+</h2>
 
-      <h2 className="attendance-title">Attendance Management</h2>
+<div className="attendance-grid">
 
-      <div className="feature-grid">
+<div
+className="attendance-card"
+onClick={()=>navigate("/add-student")}
+>
 
-        <div
-          className="feature-card"
-          onClick={() => setShowAddStudent(true)}
-        >
-          <h3>➕ Add Student</h3>
-          <p>Register new child & Capture photo</p>
-        </div>
+<div className="card-icon">👶</div>
 
-        <div
-          className="feature-card"
-          onClick={() => openFeature("ai")}
-        >
-          <h3>🤖 AI Attendance marking</h3>
-          <p>Face recognition</p>
-        </div>
+<h3>Add Student</h3>
 
-        <div
-          className="feature-card"
-          onClick={() => openFeature("dashboard")}
-        >
-          <h3>📊 Dashboard</h3>
-          <p>View attendance statistics</p>
-        </div>
+<p>
+Register new child
+</p>
 
-        <div
-          className="feature-card"
-          onClick={() => openFeature("students")}
-        >
-          <h3>👶 Students List</h3>
-          <p>View registered children</p>
-        </div>
+</div>
 
-      </div>
 
-      <div className="feature-display">
+<div
+className="attendance-card"
+onClick={()=>navigate("/attendance-marker")}
+>
 
-        {activeFeature === "ai" && (
-          <div className="feature-box">
-            <h3>AI Face Attendance</h3>
-            <FaceCapture />
-          </div>
-        )}
+<div className="card-icon">📷</div>
 
-        {activeFeature === "dashboard" && (
-          <div className="feature-box">
-            <AttendanceDashboard />
-          </div>
-        )}
+<h3>Attendance Marker</h3>
 
-        {activeFeature === "students" && (
-          <div className="feature-box">
-            <StudentsList />
-          </div>
-        )}
+<p>
+Face recognition attendance
+</p>
 
-      </div>
+</div>
 
-      {showAddStudent && (
-        <AddStudentModal closeModal={() => setShowAddStudent(false)} />
-      )}
 
-    </div>
+<div
+className="attendance-card"
+onClick={()=>navigate("/attendance-dashboard")}
+>
 
-  );
+<div className="card-icon">📊</div>
+
+<h3>Dashboard</h3>
+
+<p>
+Attendance statistics
+</p>
+
+</div>
+
+
+<div
+className="attendance-card"
+onClick={()=>navigate("/students-list")}
+>
+
+<div className="card-icon">📋</div>
+
+<h3>Student List</h3>
+
+<p>
+View registered students
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+);
+
 }
 
 export default Attendance;

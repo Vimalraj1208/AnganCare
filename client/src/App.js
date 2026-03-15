@@ -1,9 +1,9 @@
 import React from "react";
-import { BrowserRouter,Routes,Route } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 import Navbar from "./components/Navbar";
-import ProtectedRoute from "./components/ProtectedRoute";
 
+// Pages
 import Home from "./pages/Home";
 import Attendance from "./pages/Attendance";
 import Growth from "./pages/Growth";
@@ -13,67 +13,44 @@ import Profile from "./pages/Profile";
 import Login from "./pages/Login";
 import TeacherRegister from "./pages/TeacherRegister";
 
-function App(){
+// Components
+import AddStudentModal from "./components/AddStudentModal";
+import StudentsList from "./components/StudentsList";
+import AIPoseAttendance from "./components/AIPoseAttendance";
 
-return(
+function App() {
+  return (
+    <Router>
 
-<BrowserRouter>
+      {/* Navbar */}
+      <Navbar />
 
-<Navbar/>
+      {/* Application Routes */}
+      <Routes>
 
-<Routes>
+        {/* Main Pages */}
+        <Route path="/" element={<Home />} />
+        <Route path="/attendance" element={<Attendance />} />
+        <Route path="/growth" element={<Growth />} />
+        <Route path="/report" element={<Report />} />
+        <Route path="/notification" element={<Notification />} />
+        <Route path="/profile" element={<Profile />} />
 
-<Route path="/" element={<Home/>}/>
+        {/* Authentication */}
+        <Route path="/login" element={<Login />} />
+        <Route path="/teacher-register" element={<TeacherRegister />} />
 
-<Route path="/login" element={<Login/>}/>
-<Route path="/teacher-register" element={<TeacherRegister/>}/>
+        {/* Student Management */}
+        <Route path="/add-student" element={<AddStudentModal />} />
+        <Route path="/students-list" element={<StudentsList />} />
 
-<Route path="/attendance"
-element={
-<ProtectedRoute>
-<Attendance/>
-</ProtectedRoute>
-}
-/>
+        {/* AI Attendance */}
+        <Route path="/attendance-marker" element={<AIPoseAttendance />} />
 
-<Route path="/growth"
-element={
-<ProtectedRoute>
-<Growth/>
-</ProtectedRoute>
-}
-/>
+      </Routes>
 
-<Route path="/report"
-element={
-<ProtectedRoute>
-<Report/>
-</ProtectedRoute>
-}
-/>
-
-<Route path="/notification"
-element={
-<ProtectedRoute>
-<Notification/>
-</ProtectedRoute>
-}
-/>
-
-<Route path="/Profile"
-element={
-<ProtectedRoute>
-<Profile/>
-</ProtectedRoute>
-}
-/>
-
-</Routes>
-
-</BrowserRouter>
-
-);
-
+    </Router>
+  );
 }
 
 export default App;

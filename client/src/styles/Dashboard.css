@@ -1,32 +1,66 @@
-.dashboard-container{
-  text-align:center;
-  padding:60px;
+.attendance-page{
+
+padding:40px;
+background:#f5f7fb;
+min-height:100vh;
+
 }
 
-.dashboard-cards{
-  display:flex;
-  justify-content:center;
-  gap:40px;
-  margin-top:40px;
+.attendance-title{
+
+font-size:28px;
+font-weight:600;
+margin-bottom:30px;
+
 }
 
-.dashboard-card{
-  background:#ffffff;
-  padding:40px;
-  width:220px;
-  border-radius:10px;
-  box-shadow:0 4px 10px rgba(0,0,0,0.1);
-  font-size:18px;
-  font-weight:500;
-  cursor:pointer;
-  transition:0.3s;
+.attendance-grid{
+
+display:grid;
+grid-template-columns:repeat(4,1fr);
+gap:30px;
+
 }
 
-.dashboard-card:hover{
-  transform:scale(1.05);
+.attendance-card{
+
+background:white;
+border-radius:12px;
+padding:30px;
+text-align:center;
+
+box-shadow:0 5px 15px rgba(0,0,0,0.08);
+
+cursor:pointer;
+
+transition:0.3s;
+
 }
-.dashboard-container{
-    min-height: 70vh;
-    padding: 60px;
-    text-align: center;
+
+.attendance-card:hover{
+
+transform:translateY(-10px);
+
+box-shadow:0 15px 30px rgba(0,0,0,0.15);
+
+}
+
+.card-icon{
+
+font-size:40px;
+margin-bottom:15px;
+
+}
+
+.attendance-card h3{
+
+font-size:20px;
+margin-bottom:8px;
+
+}
+
+.attendance-card p{
+
+color:#777;
+
 }

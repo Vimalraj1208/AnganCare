@@ -1,276 +1,195 @@
 import React, { useEffect, useRef, useState } from "react";
-import * as tf from "@tensorflow/tfjs";
-import "@tensorflow/tfjs-backend-webgl";
-import * as poseDetection from "@tensorflow-models/pose-detection";
-import { Html5QrcodeScanner } from "html5-qrcode";
+import * as faceapi from "face-api.js";
+import { useNavigate } from "react-router-dom";
 
-function AIPoseAttendance(){
+function AIPoseAttendance() {
 
-const videoRef = useRef(null);
-const detectorRef = useRef(null);
-const scannerRef = useRef(null);
+const videoRef = useRef();
+const navigate = useNavigate();
 
-const [status,setStatus] = useState("Starting...");
-const [mode,setMode] = useState(null);
-const [handDetected,setHandDetected] = useState(false);
-
-const attendanceDone = useRef(false);
+const [modelsLoaded, setModelsLoaded] = useState(false);
+const [scanning, setScanning] = useState(false);
 
 
-// ---------------- INIT ----------------
+// LOAD MODELS
+useEffect(() => {
 
-useEffect(()=>{
-init();
-},[]);
+const loadModels = async () => {
 
-const init = async ()=>{
+try {
 
-await tf.ready();
-await tf.setBackend("webgl");
+await faceapi.nets.tinyFaceDetector.loadFromUri("/models");
+await faceapi.nets.faceLandmark68TinyNet.loadFromUri("/models");
+await faceapi.nets.faceRecognitionNet.loadFromUri("/models");
+
+setModelsLoaded(true);
 
 startCamera();
-loadModel();
+
+} catch (error) {
+
+console.error("Model loading error:", error);
+
+}
 
 };
 
+loadModels();
 
-// ---------------- CAMERA ----------------
+}, []);
 
-const startCamera = async ()=>{
 
-const stream = await navigator.mediaDevices.getUserMedia({
-video:true
+// START CAMERA
+const startCamera = () => {
+
+navigator.mediaDevices.getUserMedia({ video: true })
+.then(stream => {
+videoRef.current.srcObject = stream;
+})
+.catch(err => {
+console.log("Camera error:", err);
 });
 
-videoRef.current.srcObject = stream;
-
-videoRef.current.onloadedmetadata = ()=>{
-
-videoRef.current.play();
-
-setStatus("Camera Ready");
-
-detectPoseLoop();
-
-};
-
 };
 
 
-// ---------------- STOP CAMERA ----------------
+// SCAN FACE
+const scanFace = async () => {
 
-const stopCamera = ()=>{
-
-const stream = videoRef.current.srcObject;
-
-if(stream){
-
-stream.getTracks().forEach(track=>track.stop());
-
-}
-
-};
-
-
-// ---------------- LOAD MODEL ----------------
-
-const loadModel = async ()=>{
-
-const detector = await poseDetection.createDetector(
-poseDetection.SupportedModels.MoveNet
-);
-
-detectorRef.current = detector;
-
-};
-
-
-// ---------------- POSE LOOP ----------------
-
-const detectPoseLoop = async ()=>{
-
-if(!detectorRef.current){
-
-requestAnimationFrame(detectPoseLoop);
+if (!modelsLoaded) {
+alert("Models still loading...");
 return;
+}
+
+setScanning(true);
+
+const detection = await faceapi
+.detectSingleFace(
+videoRef.current,
+new faceapi.TinyFaceDetectorOptions()
+)
+.withFaceLandmarks(true)
+.withFaceDescriptor();
+
+if (detection) {
+
+alert("Face Detected ✅ Attendance Marked");
+
+} else {
+
+alert("No Face Found ❌");
 
 }
 
-const poses = await detectorRef.current.estimatePoses(videoRef.current);
-
-if(poses.length>0){
-
-const keypoints = poses[0].keypoints;
-
-const nose = keypoints.find(k=>k.name==="nose");
-const rightWrist = keypoints.find(k=>k.name==="right_wrist");
-const leftWrist = keypoints.find(k=>k.name==="left_wrist");
-
-if(!handDetected){
-
-// CHECK IN
-
-if(rightWrist && nose && rightWrist.y < nose.y){
-
-setMode("checkin");
-setHandDetected(true);
-
-setStatus("Right Hand Detected → Check In");
-
-startQR();
-
-}
-
-// CHECK OUT
-
-if(leftWrist && nose && leftWrist.y < nose.y){
-
-setMode("checkout");
-setHandDetected(true);
-
-setStatus("Left Hand Detected → Check Out");
-
-startQR();
-
-}
-
-}
-
-}
-
-requestAnimationFrame(detectPoseLoop);
+setScanning(false);
 
 };
 
 
-// ---------------- QR SCANNER ----------------
+// RESET CAMERA
+const resetCamera = () => {
 
-const startQR = ()=>{
-
-setStatus("Scan Student QR");
-
-scannerRef.current = new Html5QrcodeScanner(
-"qr-reader",
-{ fps:10, qrbox:250 },
-false
-);
-
-scannerRef.current.render(
-
-(decodedText)=>{
-
-if(attendanceDone.current) return;
-
-attendanceDone.current = true;
-
-markAttendance(decodedText);
-
-scannerRef.current.clear();
-
-},
-
-(error)=>{}
-
-);
+startCamera();
 
 };
 
 
-// ---------------- ATTENDANCE API ----------------
+// UI
+return (
 
-const markAttendance = async (studentId)=>{
+<div style={{ padding: "20px", textAlign: "center" }}>
 
-try{
+{/* HEADER */}
 
-setStatus("Marking attendance...");
+<div style={{
+display: "flex",
+justifyContent: "space-between",
+alignItems: "center"
+}}>
 
-const res = await fetch(
-"http://localhost:5000/api/attendance/mark",
-{
-method:"POST",
-headers:{
-"Content-Type":"application/json"
-},
-body:JSON.stringify({
-studentId,
-type:mode
-})
-}
-);
+<h2>Attendance Scanner</h2>
 
-if(res.ok){
+<button
+onClick={() => navigate("/attendance")}
+style={{
+background: "#ff4d4f",
+color: "white",
+border: "none",
+padding: "8px 15px",
+borderRadius: "5px",
+cursor: "pointer"
+}}
+>
+Close
+</button>
 
-setStatus("Attendance Marked");
-
-stopCamera(); // camera OFF
-
-resetSystem();
-
-}
-
-}catch(err){
-
-setStatus("Server Error");
-
-}
-
-};
+</div>
 
 
-// ---------------- RESET SYSTEM ----------------
+{/* CAMERA */}
 
-const resetSystem = ()=>{
-
-setTimeout(()=>{
-
-attendanceDone.current=false;
-setHandDetected(false);
-setMode(null);
-
-setStatus("Ready for next student");
-
-startCamera(); // camera restart
-
-},4000);
-
-};
-
-
-// ---------------- UI ----------------
-
-return(
-
-<div style={{textAlign:"center"}}>
-
-<h2>AI Attendance System</h2>
-
-<p>{status}</p>
+<div style={{ marginTop: "20px" }}>
 
 <video
 ref={videoRef}
 autoPlay
-playsInline
+muted
 width="400"
+height="300"
 style={{
-border:"2px solid #ccc",
-borderRadius:"10px",
-transform:"scaleX(-1)"
+border: "2px solid #ddd",
+borderRadius: "10px"
 }}
 />
 
-<div
-id="qr-reader"
+</div>
+
+
+{/* BUTTONS */}
+
+<div style={{ marginTop: "20px" }}>
+
+<button
+onClick={scanFace}
+disabled={!modelsLoaded || scanning}
 style={{
-width:"300px",
-margin:"20px auto"
+background: "#28a745",
+color: "white",
+padding: "10px 20px",
+marginRight: "10px",
+border: "none",
+borderRadius: "5px",
+cursor: "pointer"
 }}
-/>
+>
+Scan Face
+</button>
 
-<p>
+<button
+onClick={resetCamera}
+style={{
+background: "#007bff",
+color: "white",
+padding: "10px 20px",
+border: "none",
+borderRadius: "5px",
+cursor: "pointer"
+}}
+>
+Reset
+</button>
 
-Raise Right Hand → Check In  
-<br/>
-Raise Left Hand → Check Out
+</div>
+
+
+{/* STATUS */}
+
+<p style={{ marginTop: "10px", fontWeight: "bold" }}>
+
+{modelsLoaded
+? <span style={{ color: "green" }}>Models Loaded ✅</span>
+: <span style={{ color: "orange" }}>Loading Models...</span>
+}
 
 </p>
 

@@ -9,6 +9,9 @@ function Login() {
 const navigate = useNavigate();
 
 const [captcha, setCaptcha] = useState("");
+const [username, setUsername] = useState("");
+const [password, setPassword] = useState("");
+const [captchaInput, setCaptchaInput] = useState("");
 
 /* Generate Captcha */
 
@@ -57,6 +60,68 @@ navigate("/teacher-register");
 
 };
 
+/* =========================
+LOGIN FUNCTION
+========================= */
+const handleLogin = async () => {
+
+if(username === "" || password === ""){
+alert("Enter username and password");
+return;
+}
+
+if(captchaInput !== captcha){
+alert("Captcha incorrect");
+generateCaptcha();
+return;
+}
+
+try{
+
+const res = await fetch("http://localhost:5000/api/auth/login",{
+
+method:"POST",
+
+headers:{
+"Content-Type":"application/json"
+},
+
+body:JSON.stringify({
+username,
+password
+})
+
+});
+
+const data = await res.json();
+
+if(data.success){
+
+/* save session */
+
+localStorage.setItem("token","loggedin");
+localStorage.setItem("username",data.username);
+localStorage.setItem("role",data.role);
+
+alert("Login Successful");
+
+navigate("/");
+window.location.reload();
+
+}else{
+
+alert(data.message);
+
+}
+
+}catch(err){
+
+alert("Server error");
+
+}
+
+};
+
 return (
 
 <div className="login-page">
@@ -69,9 +134,19 @@ return (
 
 <h2>Login</h2>
 
-<input type="text" placeholder="Username" />
+<input
+type="text"
+placeholder="Username"
+value={username}
+onChange={(e)=>setUsername(e.target.value)}
+/>
 
-<input type="password" placeholder="Password" />
+<input
+type="password"
+placeholder="Password"
+value={password}
+onChange={(e)=>setPassword(e.target.value)}
+/>
 
 <div className="captcha-row">
 
@@ -87,9 +162,16 @@ return (
 
 </div>
 
-<input type="text" placeholder="Enter Captcha" />
+<input
+type="text"
+placeholder="Enter Captcha"
+value={captchaInput}
+onChange={(e)=>setCaptchaInput(e.target.value)}
+/>
 
-<button className="login-btn">Login</button>
+<button className="login-btn" onClick={handleLogin}>
+Login
+</button>
 
 <p className="register-link">
 New user?{" "}
