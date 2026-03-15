@@ -1,0 +1,146 @@
+.navbar{
+
+position:sticky;
+top:0;
+
+display:flex;
+align-items:center;
+justify-content:space-between;
+
+padding:14px 40px;
+
+background:linear-gradient(90deg,#2A5BD7,#1e88e5);
+
+color:white;
+
+z-index:1000;
+
+box-shadow:0 3px 10px rgba(0,0,0,0.15);
+
+}
+
+/* LOGO */
+
+.logo{
+
+font-size:20px;
+font-weight:700;
+letter-spacing:1px;
+
+}
+
+/* LINKS */
+
+.nav-links{
+
+display:flex;
+gap:28px;
+
+list-style:none;
+
+font-size:15px;
+
+}
+
+.nav-links li{
+
+cursor:pointer;
+padding:6px 10px;
+transition:0.3s;
+
+}
+
+.nav-links li:hover{
+
+color:#ffd54f;
+transform:translateY(-2px);
+
+}
+
+/* BUTTON AREA */
+
+.nav-buttons{
+
+display:flex;
+gap:12px;
+
+}
+
+/* GET STARTED BUTTON */
+
+.get-started{
+
+background:#ffd54f;
+color:black;
+
+border:none;
+
+padding:8px 14px;
+
+border-radius:6px;
+
+cursor:pointer;
+
+font-weight:600;
+
+transition:0.3s;
+
+}
+
+.get-started:hover{
+
+background:#ffca28;
+
+}
+
+/* LOGIN BUTTON */
+
+.login-btn{
+
+background:white;
+color:#2A5BD7;
+
+border:none;
+
+padding:8px 14px;
+
+border-radius:6px;
+
+cursor:pointer;
+
+font-weight:600;
+
+transition:0.3s;
+
+}
+
+.login-btn:hover{
+
+background:#f2f2f2;
+
+}
+
+/* LOGGED STATE */
+
+.logged{
+
+display:flex;
+align-items:center;
+
+background:white;
+
+color:#2A5BD7;
+
+padding:6px 12px;
+
+border-radius:6px;
+
+font-weight:600;
+
+}
+
+.lock-icon{
+
+margin-right:6px;
+
+}

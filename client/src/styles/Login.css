@@ -1,0 +1,102 @@
+/* Page Background */
+
+.login-page{
+position:relative;
+min-height:100vh;
+background:linear-gradient(135deg,#0f4cbd,#1fc0db);
+overflow:hidden;
+display:flex;
+justify-content:center;
+align-items:center;
+}
+
+
+/* Login Card */
+
+.login-container{
+background:white;
+padding:40px;
+border-radius:12px;
+width:300px;
+box-shadow:0 10px 30px rgba(0,0,0,0.2);
+text-align:center;
+}
+
+
+/* Inputs */
+
+.login-container input{
+
+width:100%;
+padding:10px;
+margin:10px 0;
+border-radius:6px;
+border:1px solid #ccc;
+
+}
+
+
+/* Button */
+
+.login-btn{
+
+width:100%;
+padding:10px;
+background:#0f4cbd;
+color:white;
+border:none;
+border-radius:6px;
+cursor:pointer;
+
+}
+
+
+/* Floating Emoji Style */
+
+.emoji{
+
+position:absolute;
+font-size:30px;
+animation:floatEmoji 8s linear infinite;
+opacity:0.7;
+
+}
+
+
+/* Emoji Positions */
+
+.emoji1{left:10%; top:90%; animation-duration:10s;}
+.emoji2{left:20%; top:95%; animation-duration:7s;}
+.emoji3{left:40%; top:92%; animation-duration:9s;}
+.emoji4{left:60%; top:96%; animation-duration:11s;}
+.emoji5{left:80%; top:94%; animation-duration:8s;}
+.emoji6{left:30%; top:97%; animation-duration:10s;}
+.emoji7{left:70%; top:95%; animation-duration:9s;}
+.emoji8{left:50%; top:98%; animation-duration:12s;}
+
+
+/* Animation */
+
+@keyframes floatEmoji{
+
+0%{
+
+transform:translateY(0px);
+opacity:0;
+
+}
+
+50%{
+
+opacity:1;
+
+}
+
+100%{
+
+transform:translateY(-900px);
+opacity:0;
+
+}
+
+}

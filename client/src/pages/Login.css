@@ -1,0 +1,129 @@
+/* Background */
+.login-container {
+  height: 90vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  overflow:visible;
+}
+
+/* Card */
+.login-box {
+  width: 380px;
+  padding: 40px 30px;
+  background: rgba(255, 255, 255, 0.95); /* slight transparency */
+  border-radius: 12px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+/* Title */
+.login-box h2 {
+  margin-bottom: 25px;
+  font-weight: 600;
+  color: #2d4ca1;
+}
+
+/* Inputs */
+.login-box input {
+  width: 100%;
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  outline: none;
+  font-size: 14px;
+  margin-bottom: 15px;
+  box-sizing: border-box;
+}
+
+.login-box input:focus {
+  border-color: #2d4ca1;
+  box-shadow: 0 0 0 2px rgba(45, 76, 161, 0.1);
+}
+
+/* Password */
+.password-wrapper {
+  position: relative;
+  width: 100%;
+  margin-bottom: 15px;
+}
+
+.password-wrapper input {
+  padding: 12px 45px 12px 12px;
+}
+
+.eye-icon {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  font-size: 16px;
+}
+
+/* Captcha */
+.captcha-box {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.captcha-text {
+  font-weight: bold;
+  letter-spacing: 2px;
+  font-size: 16px;
+}
+
+.captcha-box button {
+  padding: 6px 8px;
+  margin-left: 5px;
+  border: none;
+  border-radius: 6px;
+  background: #eef2ff;
+  cursor: pointer;
+}
+
+/* Button */
+.login-btn{
+
+width:100%;
+
+padding:12px;
+
+background:#2575fc;
+
+color:white;
+
+border:none;
+
+border-radius:6px;
+
+font-size:16px;
+
+font-weight:600;
+
+cursor:pointer;
+
+transition:0.3s ease;
+
+}
+
+.login-btn:hover{
+
+background:#1e63d6;
+
+}
+.login-btn{
+  position: relative;
+  z-index: 10;
+}
+.login-button:active {
+  transform: scale(0.98);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
