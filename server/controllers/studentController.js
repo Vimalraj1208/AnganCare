@@ -1,46 +1,59 @@
 const Student = require("../models/student");
-const QRCode = require("qrcode");
 
-exports.registerStudent = async (req,res)=>{
+exports.registerStudent = async(req,res)=>{
 
 try{
 
-const data = req.body;
+const data=req.body;
 
-const studentId = data.studentId;
+const count = await Student.countDocuments();
 
-const qrCode = await QRCode.toDataURL(studentId);
+const username = "ANGAN2K26"+String(count+1).padStart(3,"0");
+
+const password = data.name+"@"+data.dob;
 
 const student = new Student({
-aadhaarNumber:data.aadhaarNumber,
-fullName:data.fullName,
-fatherName:data.fatherName,
-motherName:data.motherName,
-fatherNumber:data.fatherNumber,
-motherNumber:data.motherNumber,
-gender:data.gender,
-dob:data.dob,
-height:data.height,
-weight:data.weight,
-studentId:studentId,
-qrCode:qrCode
-});
+
+...data,
+username,
+password
+
+})
 
 await student.save();
 
-res.status(201).json({
-message:"Student Registered Successfully",
-student
-});
+res.json({
 
-}catch(error){
+success:true,
+username,
+password
 
-console.log(error);
+})
+
+}catch(err){
 
 res.status(500).json({
-message:"Registration failed"
-});
+
+success:false,
+message:"Server error"
+
+})
 
 }
 
+}
+exports.getStudents = async(req,res)=>{
+
+try{    
+const students = await Student.find();
+
+res.json(students);
+
+}catch(err){
+
+res.status(500).json({ 
+    message:"Server error"
+
+})
+}
 };

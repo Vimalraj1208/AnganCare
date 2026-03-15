@@ -7,11 +7,13 @@ const { Server } = require("socket.io");
 
 dotenv.config();
 
+// CONNECT DATABASE
 connectDB();
 
 const app = express();
 const server = http.createServer(app);
 
+// SOCKET.IO
 const io = new Server(server,{
   cors:{
     origin:"http://localhost:3000",
@@ -21,13 +23,19 @@ const io = new Server(server,{
 
 app.set("io",io);
 
+
 // ======================
 // GLOBAL MIDDLEWARE
 // ======================
 
 app.use(cors());
+
+// JSON BODY PARSER
 app.use(express.json({ limit: "10mb" }));
-app.use(express.urlencoded({ limit: "10mb", extended: true }));
+
+// FORM DATA PARSER
+app.use(express.urlencoded({ extended: true, limit: "10mb" }));
+
 
 // ======================
 // ROUTES IMPORT
@@ -38,7 +46,8 @@ const attendanceRoutes = require("./routes/attendanceRoutes");
 const studentRoutes = require("./routes/studentRoutes");
 const faceScanRoutes = require("./routes/faceScan");
 const dashboardRoutes = require("./routes/dashboardRoutes");
-
+const uploadRoutes = require("./routes/uploadFace");   // moved here
+const notificationRoutes = require("./routes/notificationRoutes"); // new route
 
 
 // ======================
@@ -51,6 +60,7 @@ app.get("/", (req, res) => {
   });
 });
 
+
 // ======================
 // API ROUTES
 // ======================
@@ -58,19 +68,24 @@ app.get("/", (req, res) => {
 app.use("/api/auth", authRoutes);
 app.use("/api/attendance", attendanceRoutes);
 app.use("/api/students", studentRoutes);
-app.use("/students", express.static("uploads/students"));
-const uploadRoutes = require("./routes/uploadFace");
-app.use("/uploadFace", uploadRoutes);
 app.use("/api/faceScan", faceScanRoutes);
-
 app.use("/api/dashboard", dashboardRoutes);
+app.use("/api/notifications", notificationRoutes);
+// FILE STATIC ROUTE
+app.use("/students", express.static("uploads/students"));
+
+// FACE UPLOAD ROUTE
+app.use("/uploadFace", uploadRoutes);
+
+
 // ======================
 // SOCKET CONNECTION
 // ======================
 
 io.on("connection",(socket)=>{
-  console.log("Teacher Connected");
+  console.log("👨‍🏫 Teacher Connected");
 });
+
 
 // ======================
 // SERVER START

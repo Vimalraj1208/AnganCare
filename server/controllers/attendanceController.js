@@ -1,5 +1,6 @@
 const Attendance = require("../models/attendance");
 const Student = require("../models/student");
+const notification = require("../models/notification");
 
 // ================= MARK ATTENDANCE =================
 
@@ -41,7 +42,15 @@ exports.markAttendance = async (req, res) => {
         $lte: todayEnd
       }
     });
+    const newNotification = new Notification({
 
+  studentId: studentId,
+  studentName: studentName,
+  message: `${studentName} attended Anganwadi today`
+
+});
+
+await newNotification.save();
 
     // ================= MORNING CHECK-IN =================
 

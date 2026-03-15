@@ -1,13 +1,18 @@
 const express = require("express");
 const router = express.Router();
-const { registerStudent } = require("../controllers/studentController");
-const Student = require("../models/student");
 
+const {
+  registerStudent,
+  getStudents
+} = require("../controllers/studentController");
+
+
+// Register student
 router.post("/register", registerStudent);
 
-router.get("/", async (req,res)=>{
-  const students = await Student.find();
-  res.json(students);
-});
+
+// Get all students
+router.get("/", getStudents);
+
 
 module.exports = router;

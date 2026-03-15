@@ -1,43 +1,33 @@
-const mongoose = require("mongoose");
+const mongoose=require("mongoose");
 
-const studentSchema = new mongoose.Schema({
+const studentSchema=new mongoose.Schema({
 
-  aadhaarNumber: {
-    type: String,
-    required: true,
-    unique: true
-  },
+aadhaar:String,
+name:String,
 
-  fullName: String,
-  dob: Date,
-  gender: String,
+fatherName:String,
+fatherMobile:String,
 
-  fatherName: String,
-  motherName: String,
+motherName:String,
+motherMobile:String,
 
-  fatherNumber: String,
-  motherNumber: String,
+fatherEmail:String,
+motherEmail:String,
 
-  email: String,
-  location: String,
+gender:String,
+dob:String,
+age:Number,
 
-  height: Number,
-  weight: Number,
+height:Number,
+weight:Number,
 
-  studentId: {
-    type: String,
-    unique: true
-  },
+address:String,
 
-  qrCode: String,
+username:String,
+password:String,
 
-  photo: String,   // 👈 ADD THIS
+photo:String
 
-  createdBy: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "Teacher"
-  }
+})
 
-}, { timestamps: true });
-
-module.exports = mongoose.model("Student", studentSchema);
+module.exports=mongoose.model("Student",studentSchema);
