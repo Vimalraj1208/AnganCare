@@ -1,66 +1,43 @@
 import React, { useEffect, useState } from "react";
-import{QRCode, QRCodeCanvas} from "qrcode.react";
-import "../styles/StudentsList.css";
+import axios from "axios";
 
 function StudentsList(){
 
 const [students,setStudents] = useState([]);
 
 useEffect(()=>{
-
-fetch("http://localhost:5000/api/students")
-
-.then(res=>res.json())
-
-.then(data=>{
-
-setStudents(data);
-
-});
-
+fetchStudents();
 },[]);
 
+const fetchStudents = async()=>{
 
-/* DOWNLOAD QR */
+try{
 
-const downloadQR = (id)=>{
+const res = await axios.get("http://localhost:5000/api/students");
 
-const canvas = document.getElementById("qr-"+id);
+console.log("API DATA:",res.data); // debug
 
-const url = canvas.toDataURL("image/png");
+setStudents(res.data);
 
-const link = document.createElement("a");
+}catch(err){
 
-link.href = url;
-link.download = id+".png";
-
-link.click();
+console.log(err);
 
 }
 
-
-/* NOTIFY PARENT */
-
-const notifyParent=(mobile)=>{
-
-alert("Redirecting to Notification Panel");
-
-window.location.href="/notification";
-
-}
+};
 
 return(
 
-<div className="studentlist-page">
+<div style={{padding:"30px"}}>
 
 <h2>Registered Students</h2>
 
-<table>
+<table border="1" width="100%" cellPadding="10">
 
 <thead>
 
 <tr>
-
 <th>Student Name</th>
 <th>Student ID</th>
 <th>Father</th>
@@ -68,56 +45,38 @@ return(
 <th>Mother</th>
 <th>Mother Mobile</th>
 <th>QR</th>
-<th>Action</th>
-
 </tr>
 
 </thead>
 
 <tbody>
 
-{students.map((s)=>(
+{students.length === 0 ? (
+<tr>
+<td colSpan="7">No Students Found</td>
+</tr>
+) : (
 
-<tr key={s._id}>
+students.map((student,index)=>(
+<tr key={index}>
 
-<td>{s.name}</td>
-<td>{s.username}</td>
-
-<td>{s.fatherName}</td>
-<td>{s.fatherMobile}</td>
-
-<td>{s.motherName}</td>
-<td>{s.motherMobile}</td>
-
-<td>
-
-<QRCodeCanvas
-id={"qr-"+s.username}
-value={s.username+" | "+s.name}
-size={80}
-/>
-
-</td>
+<td>{student.name}</td>
+<td>{student.aadhaarNumber}</td>
+<td>{student.fatherName}</td>
+<td>{student.fatherMobile}</td>
+<td>{student.motherName}</td>
+<td>{student.motherMobile}</td>
 
 <td>
-
-<button
-onClick={()=>downloadQR(s.username)}
->
-Download QR
-</button>
-
-<button
-onClick={()=>notifyParent(s.fatherMobile)}
->
-Notify
-</button>
-
+{student.qrCode && (
+<img src={student.qrCode} alt="QR" width="60"/>
+)}
 </td>
 
 </tr>
+))
 
-))}
+)}
 
 </tbody>
 
@@ -125,7 +84,7 @@ Notify
 
 </div>
 
-)
+);
 
 }
 

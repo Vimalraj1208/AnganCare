@@ -3,16 +3,17 @@ const router = express.Router();
 const Student = require("../models/student");
 const QRCode = require("qrcode");
 
-/* =========================
-REGISTER STUDENT + QR GENERATE
-========================= */
+
+// ============================
+// REGISTER STUDENT
+// ============================
 
 router.post("/", async (req, res) => {
 
-try{
+try {
 
 const {
-aadhaarNumber,
+aadhaar,
 name,
 fatherName,
 fatherMobile,
@@ -28,28 +29,27 @@ weight,
 address
 } = req.body;
 
-/* ======================
-CHECK DUPLICATE
-====================== */
 
-const existingStudent = await Student.findOne({ aadhaarNumber });
+// check duplicate aadhaar
+const existingStudent = await Student.findOne({ aadhaar });
 
 if(existingStudent){
 
-return res.json({
-success:false,
-message:"Student already exists"
+return res.status(400).json({
+message:"Student already registered"
 });
 
 }
 
-/* ======================
-CREATE STUDENT
-====================== */
 
+// generate QR code
+const qrCode = await QRCode.toDataURL(aadhaar);
+
+
+// create student
 const student = new Student({
 
-aadhaarNumber,
+aadhaar,
 name,
 fatherName,
 fatherMobile,
@@ -62,53 +62,94 @@ dob,
 age,
 height,
 weight,
-address
+address,
+qrCode
 
 });
 
+
+// save student
 await student.save();
 
-/* ======================
-GENERATE QR CODE
-====================== */
 
-const qrData = `STUDENT_ID:${student._id}`;
+// response
+res.status(201).json({
 
-const qrCodeImage = await QRCode.toDataURL(qrData);
-
-/* ======================
-SAVE QR IN DATABASE
-====================== */
-
-student.qrCode = qrCodeImage;
-
-await student.save();
-
-/* ======================
-RESPONSE
-====================== */
-
-res.json({
-
-success:true,
 message:"Student Registered Successfully",
-qrCode:qrCodeImage
+student,
+qrCode
 
 });
 
-}catch(error){
+} catch (error) {
 
-console.log("REGISTER ERROR:",error);
+console.error(error);
 
-res.json({
-
-success:false,
-message:"Failed to register student"
-
+res.status(500).json({
+message:"Server Error"
 });
 
 }
 
 });
+
+
+// ============================
+// GET ALL STUDENTS
+// ============================
+
+router.get("/", async (req, res) => {
+
+try {
+
+const students = await Student.find().sort({ createdAt: -1 });
+
+res.status(200).json(students);
+
+} catch (error) {
+
+console.error(error);
+
+res.status(500).json({
+message:"Server Error"
+});
+
+}
+
+});
+
+
+// ============================
+// GET SINGLE STUDENT
+// ============================
+
+router.get("/:id", async (req, res) => {
+
+try {
+
+const student = await Student.findById(req.params.id);
+
+if(!student){
+
+return res.status(404).json({
+message:"Student not found"
+});
+
+}
+
+res.json(student);
+
+} catch (error) {
+
+console.error(error);
+
+res.status(500).json({
+message:"Server Error"
+});
+
+}
+
+});
+
 
 module.exports = router;

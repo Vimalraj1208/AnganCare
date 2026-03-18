@@ -2,23 +2,18 @@ const mongoose = require("mongoose");
 
 const attendanceSchema = new mongoose.Schema({
 
-  studentId:{
-    type:mongoose.Schema.Types.ObjectId,
-    ref:"student"
-  },
+studentId:{
+type:mongoose.Schema.Types.ObjectId,
+ref:"Student"
+},
 
-  date:{
-    type:String
-  },
+name:String,
 
-  checkin:{
-    type:Date
-  },
+date:{
+type:Date,
+default:Date.now
+}
 
-  checkout:{
-    type:Date
-  }
+});
 
-},{timestamps:true});
-
-module.exports = mongoose.model("attendance",attendanceSchema);
+module.exports = mongoose.model("Attendance",attendanceSchema);

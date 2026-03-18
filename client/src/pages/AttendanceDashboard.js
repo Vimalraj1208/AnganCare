@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 
-function Dashboard() {
+function AttendanceDashboard() {
 
 const [students,setStudents] = useState([]);
 const [attendance,setAttendance] = useState([]);
@@ -14,34 +14,32 @@ fetchAttendance();
 },[]);
 
 
-const fetchStudents = async ()=>{
+const fetchStudents = async () => {
 
 try{
 
 const res = await axios.get("http://localhost:5000/api/students");
-
 setStudents(res.data);
 
-}catch(error){
+}catch(err){
 
-console.log(error);
+console.log(err);
 
 }
 
 };
 
 
-const fetchAttendance = async ()=>{
+const fetchAttendance = async () => {
 
 try{
 
 const res = await axios.get("http://localhost:5000/api/attendance");
-
 setAttendance(res.data);
 
-}catch(error){
+}catch(err){
 
-console.log(error);
+console.log(err);
 
 }
 
@@ -57,34 +55,23 @@ return(
 
 <div style={{padding:"40px"}}>
 
-<h2>Anganwadi Dashboard</h2>
+<h2>Attendance Dashboard</h2>
 
 <div style={{display:"flex",gap:"20px"}}>
 
 <div style={{background:"#4CAF50",padding:"20px",color:"white"}}>
-
 <h3>Total Students</h3>
-
 <h1>{totalStudents}</h1>
-
 </div>
-
 
 <div style={{background:"#2196F3",padding:"20px",color:"white"}}>
-
 <h3>Present Today</h3>
-
 <h1>{presentToday}</h1>
-
 </div>
 
-
 <div style={{background:"#f44336",padding:"20px",color:"white"}}>
-
 <h3>Absent Today</h3>
-
 <h1>{absentToday}</h1>
-
 </div>
 
 </div>
@@ -95,4 +82,4 @@ return(
 
 }
 
-export default Dashboard;
+export default AttendanceDashboard;

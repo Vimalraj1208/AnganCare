@@ -12,7 +12,10 @@ import Notification from "./pages/Notification";
 import Profile from "./pages/Profile";
 import Login from "./pages/Login";
 import TeacherRegister from "./pages/TeacherRegister";
-import StudentQR from "./pages/StudentQR";   // ✅ QR PAGE
+import StudentQR from "./pages/StudentQR";
+import QRScanner from "./pages/QRScanner";
+import Dashboard from "./pages/Dashboard";
+import AttendanceDashboard from "./pages/AttendanceDashboard";   // ✅ NEW
 
 // Components
 import AddStudentModal from "./components/AddStudentModal";
@@ -42,6 +45,11 @@ return (
 <Route path="/notification" element={<Notification />} />
 <Route path="/profile" element={<Profile />} />
 
+{/* Dashboard */}
+
+<Route path="/dashboard" element={<Dashboard />} />
+<Route path="/attendance-dashboard" element={<AttendanceDashboard />} />
+
 {/* Authentication */}
 
 <Route path="/login" element={<Login />} />
@@ -52,9 +60,10 @@ return (
 <Route path="/add-student" element={<AddStudentModal />} />
 <Route path="/students-list" element={<StudentsList />} />
 
-{/* QR Page */}
+{/* QR Pages */}
 
 <Route path="/qr" element={<StudentQR />} />
+<Route path="/scan" element={<QRScanner />} />
 
 {/* AI Attendance */}
 

@@ -29,12 +29,8 @@ app.set("io",io);
 // ======================
 
 app.use(cors());
-
-// JSON BODY PARSER
-app.use(express.json({ limit: "10mb" }));
-
-// FORM DATA PARSER
-app.use(express.urlencoded({ extended: true, limit: "10mb" }));
+app.use(express.json());
+app.use(express.urlencoded({extended:true}));
 
 
 // ======================
@@ -46,17 +42,17 @@ const attendanceRoutes = require("./routes/attendanceRoutes");
 const studentRoutes = require("./routes/studentRoutes");
 const faceScanRoutes = require("./routes/faceScan");
 const dashboardRoutes = require("./routes/dashboardRoutes");
-const uploadRoutes = require("./routes/uploadFace");   // moved here
-const notificationRoutes = require("./routes/notificationRoutes"); // new route
+const uploadRoutes = require("./routes/uploadFace");
+const notificationRoutes = require("./routes/notificationRoutes");
 
 
 // ======================
 // ROOT ROUTE
 // ======================
 
-app.get("/", (req, res) => {
+app.get("/",(req,res)=>{
   res.json({
-    message: "🚀 Anganwadi Backend Running"
+    message:"🚀 Anganwadi Backend Running"
   });
 });
 
@@ -65,17 +61,18 @@ app.get("/", (req, res) => {
 // API ROUTES
 // ======================
 
-app.use("/api/auth", authRoutes);
-app.use("/api/attendance", attendanceRoutes);
-app.use("/api/students", studentRoutes);
-app.use("/api/faceScan", faceScanRoutes);
-app.use("/api/dashboard", dashboardRoutes);
-app.use("/api/notifications", notificationRoutes);
-// FILE STATIC ROUTE
-app.use("/students", express.static("uploads/students"));
+app.use("/api/auth",authRoutes);
+app.use("/api/students",studentRoutes);
+app.use("/api/attendance",attendanceRoutes);
+app.use("/api/faceScan",faceScanRoutes);
+app.use("/api/dashboard",dashboardRoutes);
+app.use("/api/notifications",notificationRoutes);
 
-// FACE UPLOAD ROUTE
-app.use("/uploadFace", uploadRoutes);
+// STATIC FILES
+app.use("/students",express.static("uploads/students"));
+
+// FACE UPLOAD
+app.use("/uploadFace",uploadRoutes);
 
 
 // ======================
@@ -83,7 +80,7 @@ app.use("/uploadFace", uploadRoutes);
 // ======================
 
 io.on("connection",(socket)=>{
-  console.log("👨‍🏫 Teacher Connected");
+  console.log("Teacher connected");
 });
 
 

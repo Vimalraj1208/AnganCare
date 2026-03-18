@@ -2,28 +2,35 @@ const mongoose = require("mongoose");
 
 const studentSchema = new mongoose.Schema({
 
-aadhaarNumber:{
+aadhaar:{
 type:String,
-required:true,
-unique:true
+required:true
 },
 
-name:String,
+name:{
+type:String,
+required:true
+},
+
 fatherName:String,
 fatherMobile:String,
 motherName:String,
 motherMobile:String,
+
 fatherEmail:String,
 motherEmail:String,
+
 gender:String,
 dob:String,
+
 age:Number,
 height:Number,
 weight:Number,
+
 address:String,
 
 qrCode:String
 
-});
+},{timestamps:true});
 
-module.exports = mongoose.model("Student", studentSchema);
+module.exports = mongoose.model("Student",studentSchema);
