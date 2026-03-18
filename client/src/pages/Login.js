@@ -32,7 +32,7 @@ setCaptcha(cap);
 
 };
 
-/* First time captcha */
+/* First load captcha */
 
 useEffect(() => {
 
@@ -40,7 +40,8 @@ generateCaptcha();
 
 }, []);
 
-/* Voice Captcha */
+
+/* Voice captcha */
 
 const speakCaptcha = () => {
 
@@ -52,7 +53,8 @@ window.speechSynthesis.speak(speech);
 
 };
 
-/* Go to register */
+
+/* Go register */
 
 const goRegister = () => {
 
@@ -60,20 +62,24 @@ navigate("/teacher-register");
 
 };
 
-/* =========================
-LOGIN FUNCTION
-========================= */
+
+/* ================= LOGIN ================= */
+
 const handleLogin = async () => {
 
 if(username === "" || password === ""){
+
 alert("Enter username and password");
 return;
+
 }
 
 if(captchaInput !== captcha){
+
 alert("Captcha incorrect");
 generateCaptcha();
 return;
+
 }
 
 try{
@@ -105,8 +111,10 @@ localStorage.setItem("role",data.role);
 
 alert("Login Successful");
 
+/* redirect */
+
 navigate("/");
-window.location.reload();
+window.location.reload(); // <-- only redirect
 
 }else{
 
@@ -121,6 +129,9 @@ alert("Server error");
 }
 
 };
+
+
+/* UI */
 
 return (
 

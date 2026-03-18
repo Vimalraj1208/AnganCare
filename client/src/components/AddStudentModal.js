@@ -1,12 +1,14 @@
-import React, { useState } from "react";
+import React,{useState} from "react";
 import "../styles/AddStudentModal.css";
-import { useNavigate } from "react-router-dom";
+import {useNavigate} from "react-router-dom";
 
 function AddStudentModal(){
 
+const navigate = useNavigate();
+
 const [form,setForm] = useState({
 
-aadhaar:"",
+aadhaarNumber:"",
 name:"",
 fatherName:"",
 fatherMobile:"",
@@ -32,7 +34,7 @@ setForm({
 
 })
 
-}
+};
 
 const calculateAge=(dob)=>{
 
@@ -41,24 +43,58 @@ const today = new Date();
 
 let age = today.getFullYear() - birth.getFullYear();
 
-if(age>6){
-
-alert("Child age must be below 6 years");
-return;
-
-}
-
 setForm({
 
 ...form,
 dob:dob,
 age:age
 
-})
+});
+
+};
+
+/* ======================
+REGISTER STUDENT
+====================== */
+
+const registerStudent = async()=>{
+
+try{
+
+const res = await fetch("http://localhost:5000/api/students",{
+
+method:"POST",
+
+headers:{
+"Content-Type":"application/json"
+},
+
+body:JSON.stringify(form)
+
+});
+
+const data = await res.json();
+
+if(data.success){
+
+alert("Student Registered Successfully");
+navigate("/qr",{state:{qr:data.qrCode}});
+
+}else{
+
+alert(data.message);
 
 }
 
-const navigate = useNavigate();
+}catch(error){
+
+console.log(error);
+alert("Server error");
+
+}
+
+};
+
 return(
 
 <div className="student-page">
@@ -73,14 +109,16 @@ return(
 className="close-btn"
 onClick={()=>navigate("/attendance")}
 >
+
 ✖
+
 </button>
 
 </div>
 
 <div className="student-grid">
 
-<input name="aadhaar" placeholder="Aadhaar Number" onChange={handleChange}/>
+<input name="aadhaarNumber" placeholder="Aadhaar Number" onChange={handleChange}/>
 <input name="name" placeholder="Full Name" onChange={handleChange}/>
 
 <input name="fatherName" placeholder="Father Name" onChange={handleChange}/>
@@ -89,8 +127,8 @@ onClick={()=>navigate("/attendance")}
 <input name="motherName" placeholder="Mother Name" onChange={handleChange}/>
 <input name="motherMobile" placeholder="Mother Mobile" onChange={handleChange}/>
 
-<input name="fatherEmail" placeholder="Father Email"/>
-<input name="motherEmail" placeholder="Mother Email"/>
+<input name="fatherEmail" placeholder="Father Email" onChange={handleChange}/>
+<input name="motherEmail" placeholder="Mother Email" onChange={handleChange}/>
 
 <select name="gender" onChange={handleChange}>
 <option>Gender</option>
@@ -102,15 +140,20 @@ onClick={()=>navigate("/attendance")}
 
 <input value={form.age} placeholder="Age" readOnly/>
 
-<input name="height" placeholder="Height (cm)"/>
-<input name="weight" placeholder="Weight (kg)"/>
+<input name="height" placeholder="Height (cm)" onChange={handleChange}/>
+<input name="weight" placeholder="Weight (kg)" onChange={handleChange}/>
 
-<textarea name="address" placeholder="Address"></textarea>
+<textarea name="address" placeholder="Address" onChange={handleChange}></textarea>
 
 </div>
 
-<button className="register-btn">
+<button
+className="register-btn"
+onClick={registerStudent}
+>
+
 Register Student
+
 </button>
 
 </div>
@@ -118,6 +161,7 @@ Register Student
 </div>
 
 )
+
 }
 
 export default AddStudentModal;

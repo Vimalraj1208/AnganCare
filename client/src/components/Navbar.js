@@ -10,10 +10,14 @@ const [user,setUser] = useState(null);
 
 useEffect(()=>{
 
-const storedUser = JSON.parse(localStorage.getItem("user"));
+const username = localStorage.getItem("username");
 
-if(storedUser){
-setUser(storedUser);
+if(username){
+
+setUser({
+username: username
+});
+
 }
 
 },[]);
@@ -21,7 +25,9 @@ setUser(storedUser);
 
 const handleNavigate = (path)=>{
 
-if(!user){
+const token = localStorage.getItem("token");
+
+if(!token){
 
 navigate("/login");
 
@@ -36,11 +42,13 @@ navigate(path);
 
 const logout = ()=>{
 
-localStorage.removeItem("user");
+localStorage.removeItem("token");
+localStorage.removeItem("username");
+localStorage.removeItem("role");
 
 setUser(null);
 
-navigate("/");
+navigate("/login");
 
 };
 
@@ -52,7 +60,6 @@ return(
 <div className="logo" onClick={()=>navigate("/")}>
 ANGANCARE
 </div>
-
 
 <ul className="nav-links">
 
@@ -69,7 +76,6 @@ ANGANCARE
 <li onClick={()=>handleNavigate("/profile")}>Settings</li>
 
 </ul>
-
 
 <div className="nav-buttons">
 
