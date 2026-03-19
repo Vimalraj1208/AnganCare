@@ -4,149 +4,103 @@ const Student = require("../models/student");
 const QRCode = require("qrcode");
 
 
-// ============================
-// REGISTER STUDENT
-// ============================
-
+// ======================
+// ➕ ADD STUDENT (POST)
+// ======================
 router.post("/", async (req, res) => {
 
-try {
+  console.log("🔥 STUDENT API HIT");
+  console.log(req.body);
 
-const {
-aadhaar,
-name,
-fatherName,
-fatherMobile,
-motherName,
-motherMobile,
-fatherEmail,
-motherEmail,
-gender,
-dob,
-age,
-height,
-weight,
-address
-} = req.body;
+  try {
 
+    const {
+      aadhaar,
+      name,
+      fatherName,
+      fatherMobile,
+      motherName,
+      motherMobile,
+      fatherEmail,
+      motherEmail,
+      gender,
+      dob,
+      age,
+      height,
+      weight,
+      address
+    } = req.body;
 
-// validation
-if(!aadhaar){
-return res.status(400).json({ message:"Aadhaar Number required" });
-}
+    // duplicate check
+    const existing = await Student.findOne({ aadhaar });
 
-if(!name){
-return res.status(400).json({ message:"Name required" });
-}
+    if (existing) {
+      return res.status(400).json({
+        message: "Aadhaar already exists"
+      });
+    }
 
+    // create student
+    const student = new Student({
+      aadhaar,
+      name,
+      fatherName,
+      fatherMobile,
+      motherName,
+      motherMobile,
+      fatherEmail,
+      motherEmail,
+      gender,
+      dob,
+      age,
+      height,
+      weight,
+      address
+    });
 
-// duplicate check
-const existingStudent = await Student.findOne({ aadhaar });
+    await student.save();
 
-if(existingStudent){
-return res.status(400).json({ message:"Aadhaar already exists" });
-}
+    // QR generate
+    const qrCode = await QRCode.toDataURL(`STUDENT_ID:${student._id}`);
 
+    student.qrCode = qrCode;
+    await student.save();
 
-// QR generate
-const qrCode = await QRCode.toDataURL(String(aadhaar));
+    res.json({
+      success: true,
+      qrCode,
+      student
+    });
 
+  } catch (error) {
 
-// create student
-const student = new Student({
+    console.log(error);
 
-aadhaar,
-name,
-fatherName,
-fatherMobile,
-motherName,
-motherMobile,
-fatherEmail,
-motherEmail,
-gender,
-dob,
-age,
-height,
-weight,
-address,
-qrCode
-
-});
-
-await student.save();
-
-
-// response
-res.json({
-success:true,
-message:"Student Registered Successfully",
-qrCode,
-student
-});
-
-} catch (error) {
-
-console.log(error);
-
-// duplicate error fallback
-if(error.code === 11000){
-return res.status(400).json({
-message:"Aadhaar already exists"
-});
-}
-
-res.status(500).json({
-message:"Server Error",
-error:error.message
-});
-
-}
+    res.status(500).json({
+      message: "Server Error"
+    });
+  }
 
 });
 
 
-// ============================
-// GET ALL
-// ============================
-
+// ======================
+// 📋 GET ALL STUDENTS
+// ======================
 router.get("/", async (req, res) => {
+  try {
 
-try {
+    const students = await Student.find();
 
-const students = await Student.find().sort({ createdAt:-1 });
-res.json(students);
+    res.json(students);
 
-} catch (error) {
-
-res.status(500).json({ message:"Server Error" });
-
-}
-
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      message: "Server Error"
+    });
+  }
 });
 
-
-// ============================
-// GET ONE
-// ============================
-
-router.get("/:id", async (req, res) => {
-
-try {
-
-const student = await Student.findById(req.params.id);
-
-if(!student){
-return res.status(404).json({ message:"Student not found" });
-}
-
-res.json(student);
-
-} catch (error) {
-
-res.status(500).json({ message:"Server Error" });
-
-}
-
-});
 
 module.exports = router;

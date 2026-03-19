@@ -2,18 +2,20 @@ const mongoose = require("mongoose");
 
 const attendanceSchema = new mongoose.Schema({
 
-studentId:{
-type:mongoose.Schema.Types.ObjectId,
-ref:"Student"
-},
+  studentId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Student"
+  },
 
-name:String,
+  name: String,
 
-date:{
-type:Date,
-default:Date.now
-}
+  // 🔥 ADD THIS
+ photo: String,
+  date: {
+    type: Date,
+    default: Date.now
+  }
 
 });
 
-module.exports = mongoose.model("Attendance",attendanceSchema);
+module.exports = mongoose.model("Attendance", attendanceSchema);

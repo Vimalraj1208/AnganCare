@@ -1,25 +1,29 @@
 const express = require("express");
 const router = express.Router();
-const fs = require("fs");
-const path = require("path");
+const multer = require("multer");
 
-router.post("/", (req, res) => {
+// STORAGE CONFIG
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, "uploads/");
+  },
+  filename: (req, file, cb) => {
+    cb(null, Date.now() + ".jpg");
+  }
+});
 
-const { studentId, image } = req.body;
+const upload = multer({ storage });
 
-if (!studentId || !image) {
-return res.json({ message: "Missing data" });
-}
+// API
+router.post("/", upload.single("image"), (req, res) => {
 
-// remove base64 header
-const base64Data = image.replace(/^data:image\/\w+;base64,/, "");
+  console.log("🔥 FILE UPLOADED");
 
-const filePath = path.join(__dirname, "../faces", `${studentId}.jpg`);
-
-fs.writeFileSync(filePath, base64Data, "base64");
-
-res.json({ message: "Face saved successfully" });
+  res.json({
+    message: "File uploaded",
+    file: req.file
+  });
 
 });
-console.log("Upload face is received");
+
 module.exports = router;
