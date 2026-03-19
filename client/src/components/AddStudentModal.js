@@ -66,7 +66,7 @@ const data = await res.json();
 if (data.success) {
 
 alert("Student Registered Successfully");
-navigate("/qr", { state: { qr: data.qrCode } });
+navigate("/face",{state: { qr: data.qrCode}});
 
 } else {
 

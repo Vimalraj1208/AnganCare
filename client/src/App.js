@@ -16,11 +16,12 @@ import StudentQR from "./pages/StudentQR";
 import QRScanner from "./pages/QRScanner";
 import Dashboard from "./pages/Dashboard";
 import AttendanceDashboard from "./pages/AttendanceDashboard";   // ✅ NEW
-
+import FaceCapture from "./pages/FaceCapture";   // ✅ NEW  
 // Components
 import AddStudentModal from "./components/AddStudentModal";
 import StudentsList from "./components/StudentsList";
 import AIPoseAttendance from "./components/AIPoseAttendance";
+import AttendanceMarker from "./pages/AttendanceMarker";   // ✅ NEW
 
 function App() {
 
@@ -59,6 +60,7 @@ return (
 
 <Route path="/add-student" element={<AddStudentModal />} />
 <Route path="/students-list" element={<StudentsList />} />
+<Route path="/face" element={<FaceCapture />} />
 
 {/* QR Pages */}
 
@@ -68,6 +70,7 @@ return (
 {/* AI Attendance */}
 
 <Route path="/attendance-marker" element={<AIPoseAttendance />} />
+<Route path="/face-marker" element={<AttendanceMarker />} />
 
 </Routes>
 

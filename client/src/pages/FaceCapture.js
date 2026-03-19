@@ -1,146 +1,98 @@
-import React, { useRef, useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useRef, useState } from "react";
+import Webcam from "react-webcam";
+import { useLocation, useNavigate } from "react-router-dom";
 
 function FaceCapture(){
 
-const videoRef = useRef(null);
-const canvasRef = useRef(null);
-
+const webcamRef = useRef(null);
+const location = useLocation();
 const navigate = useNavigate();
 
-const [image,setImage] = useState(null);
+const [image, setImage] = useState(null);
+const [cameraOn, setCameraOn] = useState(true);
 
+const capture = () => {
 
-/* ===============================
-CAMERA AUTO OPEN
-================================ */
+const screenshot = webcamRef.current.getScreenshot();
+setImage(screenshot);
 
-useEffect(()=>{
-
-navigator.mediaDevices.getUserMedia({ video:true })
-
-.then(stream=>{
-
-videoRef.current.srcObject = stream;
-
-})
-
-.catch(err=>{
-
-alert("Camera access denied");
-
-});
-
-},[]);
-
-
-
-/* ===============================
-CAPTURE IMAGE
-================================ */
-
-const capture = ()=>{
-
-const video = videoRef.current;
-const canvas = canvasRef.current;
-
-canvas.width = video.videoWidth;
-canvas.height = video.videoHeight;
-
-const ctx = canvas.getContext("2d");
-
-ctx.drawImage(video,0,0);
-
-const dataURL = canvas.toDataURL("image/png");
-
-setImage(dataURL);
+// 🔥 camera OFF
+setCameraOn(false);
 
 };
 
+const saveImage = async () => {
 
-
-/* ===============================
-SAVE IMAGE
-================================ */
-
-const saveFace = async ()=>{
-
-try{
-
-await fetch("http://localhost:5000/uploadFace",{
-
+await fetch("http://localhost:5000/api/upload-face",{
 method:"POST",
-
-headers:{
-"Content-Type":"application/json"
-},
-
-body:JSON.stringify({
-image:image
-})
-
+headers:{ "Content-Type":"application/json" },
+body: JSON.stringify({ image })
 });
 
-alert("Face captured successfully");
+alert("Face Saved");
 
-/* Next step → QR */
-
-navigate("/generate-qr");
-
-}catch(err){
-
-alert("Face upload error");
-
-}
+// 👉 go attendance
+navigate("/attendance-marker");
 
 };
 
+const printQR = () => {
 
+const win = window.open("");
+win.document.write(`<img src="${location.state?.qr}" />`);
+win.print();
 
-return(
+};
 
-<div style={{textAlign:"center",padding:"40px"}}>
+return (
 
-<h2>Capture Student Face</h2>
+<div style={{textAlign:"center"}}>
 
-<video
-ref={videoRef}
-autoPlay
-width="400"
-height="300"
-style={{borderRadius:"10px"}}
+<h2>Face Capture</h2>
+
+{/* CLOSE BUTTON */}
+<button onClick={()=>navigate("/dashboard")}>❌ Close</button>
+
+<br/><br/>
+
+{/* CAMERA */}
+{cameraOn && (
+<Webcam
+ref={webcamRef}
+screenshotFormat="image/jpeg"
+width={300}
 />
-
-<br/><br/>
-
-<button onClick={capture}>
-Capture
-</button>
-
-
-<br/><br/>
-
-{image && (
-
-<div>
-
-<img src={image} width="200"/>
-
-<br/><br/>
-
-<button onClick={saveFace}>
-Save Face
-</button>
-
-</div>
-
 )}
 
-<canvas ref={canvasRef} style={{display:"none"}}/>
+<br/>
+
+{cameraOn && <button onClick={capture}>Capture</button>}
+
+<br/><br/>
+
+{/* IMAGE */}
+{image && (
+<>
+<img src={image} width={200}/>
+<br/>
+<button onClick={saveImage}>Save & Continue</button>
+</>
+)}
+
+<br/><br/>
+
+{/* QR */}
+{location.state?.qr && (
+<>
+<img src={location.state.qr} width={200}/>
+<br/>
+<button onClick={printQR}>🖨 Print QR</button>
+</>
+)}
 
 </div>
 
-)
+);
 
 }
 
