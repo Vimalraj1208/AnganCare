@@ -4,7 +4,8 @@ const studentSchema = new mongoose.Schema({
 
 aadhaar:{
 type:String,
-required:true
+required:true,
+unique:true
 },
 
 name:{

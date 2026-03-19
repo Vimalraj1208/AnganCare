@@ -1,42 +1,40 @@
-import React,{useState} from "react";
+import React, { useState } from "react";
 import "../styles/AddStudentModal.css";
-import {useNavigate} from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
-function AddStudentModal(){
+function AddStudentModal() {
 
 const navigate = useNavigate();
 
-const [form,setForm] = useState({
+const [form, setForm] = useState({
 
-aadhaarNumber:"",
-name:"",
-fatherName:"",
-fatherMobile:"",
-motherName:"",
-motherMobile:"",
-fatherEmail:"",
-motherEmail:"",
-gender:"",
-dob:"",
-age:"",
-address:"",
-height:"",
-weight:""
+aadhaar: "",
+name: "",
+fatherName: "",
+fatherMobile: "",
+motherName: "",
+motherMobile: "",
+fatherEmail: "",
+motherEmail: "",
+gender: "",
+dob: "",
+age: "",
+address: "",
+height: "",
+weight: ""
 
 });
 
-const handleChange=(e)=>{
+const handleChange = (e) => {
 
 setForm({
-
 ...form,
-[e.target.name]:e.target.value
-
-})
+[e.target.name]: e.target.value
+});
 
 };
 
-const calculateAge=(dob)=>{
+const calculateAge = (dob) => {
 
 const birth = new Date(dob);
 const today = new Date();
@@ -44,81 +42,67 @@ const today = new Date();
 let age = today.getFullYear() - birth.getFullYear();
 
 setForm({
-
 ...form,
-dob:dob,
-age:age
-
+dob: dob,
+age: age
 });
 
 };
 
-/* ======================
-REGISTER STUDENT
-====================== */
+const registerStudent = async () => {
 
-const registerStudent = async()=>{
+try {
 
-try{
+const res = await fetch("http://localhost:5000/api/students", {
 
-const res = await fetch("http://localhost:5000/api/students",{
-
-method:"POST",
-
-headers:{
-"Content-Type":"application/json"
-},
-
-body:JSON.stringify(form)
+method: "POST",
+headers: { "Content-Type": "application/json" },
+body: JSON.stringify(form)
 
 });
 
 const data = await res.json();
 
-if(data.success){
+if (data.success) {
 
 alert("Student Registered Successfully");
-navigate("/qr",{state:{qr:data.qrCode}});
+navigate("/qr", { state: { qr: data.qrCode } });
 
-}else{
+} else {
 
 alert(data.message);
 
 }
 
-}catch(error){
+} catch (error) {
 
 console.log(error);
-alert("Server error");
+alert("Server Error");
 
 }
 
 };
 
-return(
+return (
 
 <div className="student-page">
-
 <div className="student-card">
 
 <div className="form-header">
-
 <h2>Student Registration</h2>
 
 <button
 className="close-btn"
-onClick={()=>navigate("/attendance")}
+onClick={() => navigate("/attendance")}
 >
-
 ✖
-
 </button>
 
 </div>
 
 <div className="student-grid">
 
-<input name="aadhaarNumber" placeholder="Aadhaar Number" onChange={handleChange}/>
+<input name="aadhaar" placeholder="Aadhaar Number" onChange={handleChange}/>
 <input name="name" placeholder="Full Name" onChange={handleChange}/>
 
 <input name="fatherName" placeholder="Father Name" onChange={handleChange}/>
@@ -147,20 +131,14 @@ onClick={()=>navigate("/attendance")}
 
 </div>
 
-<button
-className="register-btn"
-onClick={registerStudent}
->
-
+<button className="register-btn" onClick={registerStudent}>
 Register Student
-
 </button>
 
 </div>
-
 </div>
 
-)
+);
 
 }
 

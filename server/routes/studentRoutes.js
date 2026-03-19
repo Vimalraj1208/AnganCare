@@ -30,20 +30,26 @@ address
 } = req.body;
 
 
-// check duplicate aadhaar
-const existingStudent = await Student.findOne({ aadhaar });
+// validation
+if(!aadhaar){
+return res.status(400).json({ message:"Aadhaar Number required" });
+}
 
-if(existingStudent){
-
-return res.status(400).json({
-message:"Student already registered"
-});
-
+if(!name){
+return res.status(400).json({ message:"Name required" });
 }
 
 
-// generate QR code
-const qrCode = await QRCode.toDataURL(aadhaar);
+// duplicate check
+const existingStudent = await Student.findOne({ aadhaar });
+
+if(existingStudent){
+return res.status(400).json({ message:"Aadhaar already exists" });
+}
+
+
+// QR generate
+const qrCode = await QRCode.toDataURL(String(aadhaar));
 
 
 // create student
@@ -67,26 +73,31 @@ qrCode
 
 });
 
-
-// save student
 await student.save();
 
 
 // response
-res.status(201).json({
-
+res.json({
+success:true,
 message:"Student Registered Successfully",
-student,
-qrCode
-
+qrCode,
+student
 });
 
 } catch (error) {
 
-console.error(error);
+console.log(error);
+
+// duplicate error fallback
+if(error.code === 11000){
+return res.status(400).json({
+message:"Aadhaar already exists"
+});
+}
 
 res.status(500).json({
-message:"Server Error"
+message:"Server Error",
+error:error.message
 });
 
 }
@@ -95,24 +106,19 @@ message:"Server Error"
 
 
 // ============================
-// GET ALL STUDENTS
+// GET ALL
 // ============================
 
 router.get("/", async (req, res) => {
 
 try {
 
-const students = await Student.find().sort({ createdAt: -1 });
-
-res.status(200).json(students);
+const students = await Student.find().sort({ createdAt:-1 });
+res.json(students);
 
 } catch (error) {
 
-console.error(error);
-
-res.status(500).json({
-message:"Server Error"
-});
+res.status(500).json({ message:"Server Error" });
 
 }
 
@@ -120,7 +126,7 @@ message:"Server Error"
 
 
 // ============================
-// GET SINGLE STUDENT
+// GET ONE
 // ============================
 
 router.get("/:id", async (req, res) => {
@@ -130,26 +136,17 @@ try {
 const student = await Student.findById(req.params.id);
 
 if(!student){
-
-return res.status(404).json({
-message:"Student not found"
-});
-
+return res.status(404).json({ message:"Student not found" });
 }
 
 res.json(student);
 
 } catch (error) {
 
-console.error(error);
-
-res.status(500).json({
-message:"Server Error"
-});
+res.status(500).json({ message:"Server Error" });
 
 }
 
 });
-
 
 module.exports = router;
