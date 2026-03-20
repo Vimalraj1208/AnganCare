@@ -20,7 +20,7 @@ app.use(express.json());
 
 const studentRoutes = require("./routes/studentRoutes");
 const attendanceRoutes = require("./routes/attendanceRoutes");
-const faceScanRoutes = require("./routes/faceScan"); // 🔥 ADD THIS
+const faceScanRoutes = require("./routes/faceScanRoutes"); // 🔥 ADD THIS
 
 // ======================
 // ROOT
