@@ -1,0 +1,169 @@
+.navbar{
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:15px 40px;
+background:linear-gradient(to right,#0754e1,#2a5298);
+color:white;
+}
+
+.logo{
+font-size:22px;
+font-weight:bold;
+letter-spacing:1px;
+}
+
+.nav-links{
+display:flex;
+gap:30px;
+list-style:none;
+}
+
+.nav-links a{
+text-decoration:none;
+color:white;
+font-weight:500;
+}
+
+/* RIGHT SIDE BUTTONS */
+
+.nav-buttons{
+display:flex;
+gap:10px;
+}
+
+/* GET STARTED BUTTON */
+
+.start-btn{
+
+background:#f7b731;
+
+color:black;
+
+border:none;
+
+padding:8px 18px;
+
+border-radius:6px;
+
+font-weight:bold;
+
+cursor:pointer;
+
+}
+
+/* LOGIN BUTTON */
+
+.login-btn{
+
+background:#2d6cdf;
+
+color:white;
+
+border:none;
+
+padding:8px 18px;
+
+border-radius:6px;
+
+cursor:pointer;
+
+}
+/* Right side buttons container */
+
+.nav-buttons{
+display:flex;
+align-items:center;
+gap:15px;
+}
+
+/* Username style */
+
+.username{
+color:white;
+font-size:15px;
+font-weight:500;
+background:rgba(255,255,255,0.15);
+padding:6px 12px;
+border-radius:20px;
+display:flex;
+align-items:center;
+gap:6px;
+}
+
+/* Logout button */
+
+.login-btn{
+background:linear-gradient(90deg,#36d1dc,#5b86e5);
+border:none;
+color:white;
+padding:7px 16px;
+border-radius:6px;
+cursor:pointer;
+font-weight:500;
+transition:0.3s;
+}
+
+.login-btn:hover{
+opacity:0.9;
+transform:scale(1.05);
+}
+.navbar{
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:10px 40px;
+background:linear-gradient(90deg,#2b5876,#4e4376);
+}
+.navbar{
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:15px 40px;
+background:#0f2a44;
+color:white;
+}
+
+.logo{
+font-size:22px;
+font-weight:bold;
+cursor:pointer;
+}
+
+.nav-links{
+display:flex;
+gap:20px;
+list-style:none;
+}
+
+.nav-links li{
+cursor:pointer;
+}
+
+.nav-buttons button{
+margin-left:10px;
+padding:6px 14px;
+border:none;
+border-radius:5px;
+cursor:pointer;
+}
+
+.start-btn{
+background:#ff8c42;
+color:white;
+}
+
+.login-btn{
+background:#4da6ff;
+color:white;
+}
+
+.logout-btn{
+background:#ff4d4f;
+color:white;
+}
+
+.username{
+margin-right:10px;
+font-weight:bold;
+}
