@@ -4,132 +4,122 @@ import "../styles/Navbar.css";
 
 function Navbar() {
 
-const navigate = useNavigate();
+  const navigate = useNavigate();
 
-const [user,setUser] = useState(null);
+  const [user, setUser] = useState(null);
 
-useEffect(()=>{
+  useEffect(() => {
+    const username = localStorage.getItem("username");
 
-const username = localStorage.getItem("username");
+    if (username) {
+      setUser({
+        username: username
+      });
+    }
+  }, []);
 
-if(username){
+  // 🔐 Protected navigation
+  const handleNavigate = (path) => {
+    const token = localStorage.getItem("token");
 
-setUser({
-username: username
-});
+    if (!token) {
+      navigate("/login");
+    } else {
+      navigate(path);
+    }
+  };
 
-}
+  // 🚪 Logout
+  const logout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("username");
+    localStorage.removeItem("role");
 
-},[]);
+    setUser(null);
+    navigate("/login");
+  };
 
+  return (
+    <nav className="navbar">
 
-const handleNavigate = (path)=>{
+      {/* Logo */}
+      <div className="logo" onClick={() => navigate("/")}>
+        ANGANCARE
+      </div>
 
-const token = localStorage.getItem("token");
+      {/* Links */}
+      <ul className="nav-links">
 
-if(!token){
+        <li onClick={() => navigate("/")}>Home</li>
 
-navigate("/login");
+        <li onClick={() => handleNavigate("/attendance")}>
+          Attendance
+        </li>
 
-}else{
+        <li onClick={() => handleNavigate("/growth")}>
+          Growth
+        </li>
 
-navigate(path);
+        <li onClick={() => handleNavigate("/report")}>
+          Report
+        </li>
 
-}
+        <li onClick={() => handleNavigate("/notification")}>
+          Notification
+        </li>
 
-};
+        {/* ✅ Profile */}
+        <li onClick={() => handleNavigate("/profile")}>
+          Profile
+        </li>
 
+        {/* ✅ Settings FIXED */}
+        <li onClick={() => handleNavigate("/settings")}>
+          Settings
+        </li>
 
-const logout = ()=>{
+      </ul>
 
-localStorage.removeItem("token");
-localStorage.removeItem("username");
-localStorage.removeItem("role");
+      {/* Right side buttons */}
+      <div className="nav-buttons">
 
-setUser(null);
+        {user ? (
+          <div className="user-box">
 
-navigate("/login");
+            <span className="username">
+              {user.username}
+            </span>
 
-};
+            <button
+              className="logout-btn"
+              onClick={logout}
+            >
+              Logout
+            </button>
 
+          </div>
+        ) : (
+          <>
+            <button
+              className="start-btn"
+              onClick={() => navigate("/teacher-register")}
+            >
+              Get Started
+            </button>
 
-return(
+            <button
+              className="login-btn"
+              onClick={() => navigate("/login")}
+            >
+              Login
+            </button>
+          </>
+        )}
 
-<nav className="navbar">
+      </div>
 
-<div className="logo" onClick={()=>navigate("/")}>
-ANGANCARE
-</div>
-
-<ul className="nav-links">
-
-<li onClick={()=>navigate("/")}>Home</li>
-
-<li onClick={()=>handleNavigate("/attendance")}>Attendance</li>
-
-<li onClick={()=>handleNavigate("/growth")}>Growth</li>
-
-<li onClick={()=>handleNavigate("/report")}>Report</li>
-
-<li onClick={()=>handleNavigate("/notification")}>Notification</li>
-
-<li onClick={()=>handleNavigate("/profile")}>Settings</li>
-
-</ul>
-
-<div className="nav-buttons">
-
-{user ? (
-
-<div className="user-box">
-
-<span className="username">
-{user.username}
-</span>
-
-<button
-className="logout-btn"
-onClick={logout}
->
-
-Logout
-
-</button>
-
-</div>
-
-) : (
-
-<>
-
-<button
-className="start-btn"
-onClick={()=>navigate("/teacher-register")}
->
-
-Get Started
-
-</button>
-
-<button
-className="login-btn"
-onClick={()=>navigate("/login")}
->
-
-Login
-
-</button>
-
-</>
-
-)}
-
-</div>
-
-</nav>
-
-);
-
+    </nav>
+  );
 }
 
 export default Navbar;

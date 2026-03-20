@@ -17,6 +17,7 @@ import QRScanner from "./pages/QRScanner";
 import Dashboard from "./pages/Dashboard";
 import AttendanceDashboard from "./pages/AttendanceDashboard";   // ✅ NEW
 import FaceCapture from "./pages/FaceCapture";   // ✅ NEW  
+import Settings from "./pages/Settings";   // ✅ NEW
 // Components
 import AddStudentModal from "./components/AddStudentModal";
 import StudentsList from "./components/StudentsList";
@@ -45,6 +46,7 @@ return (
 <Route path="/report" element={<Report />} />
 <Route path="/notification" element={<Notification />} />
 <Route path="/profile" element={<Profile />} />
+<Route path="/settings" element={<Settings />} />
 
 {/* Dashboard */}
 
