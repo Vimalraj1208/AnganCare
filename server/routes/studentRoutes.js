@@ -3,9 +3,8 @@ const router = express.Router();
 const Student = require("../models/student");
 const QRCode = require("qrcode");
 
-
 // ======================
-// ➕ ADD STUDENT (POST)
+// ➕ ADD STUDENT
 // ======================
 router.post("/", async (req, res) => {
   try {
@@ -29,15 +28,15 @@ router.post("/", async (req, res) => {
       address
     } = req.body;
 
-    // ✅ REQUIRED CHECK
+    // ✅ validation
     if (!aadhaar || !name) {
       return res.status(400).json({
         success: false,
-        message: "Aadhaar and Name required ❌"
+        message: "Aadhaar & Name required ❌"
       });
     }
 
-    // ✅ DUPLICATE CHECK
+    // ✅ duplicate check
     const existing = await Student.findOne({ aadhaar });
 
     if (existing) {
@@ -47,10 +46,7 @@ router.post("/", async (req, res) => {
       });
     }
 
-    // ✅ QR GENERATE FIRST
-    const qrCode = await QRCode.toDataURL(`STUDENT_ID:${student._id}`);
-
-    // ✅ CREATE STUDENT (ONE TIME SAVE ONLY 🔥)
+    // ✅ STEP 1: create student (without QR)
     const student = new Student({
       aadhaar,
       name,
@@ -65,31 +61,31 @@ router.post("/", async (req, res) => {
       age,
       height,
       weight,
-      address,
-      qrCode
+      address
     });
 
+    // ✅ STEP 2: save first
     await student.save();
 
-    // ✅ RESPONSE
+    // ✅ STEP 3: generate QR using _id
+    const qrCode = await QRCode.toDataURL(
+      `STUDENT_ID:${student._id}`
+    );
+
+    // ✅ STEP 4: update QR
+    student.qrCode = qrCode;
+    await student.save();
+
+    // ✅ response
     res.status(201).json({
       success: true,
-      message: "Student Registered Successfully ✅",
+      message: "Student Registered ✅",
       qrCode,
       student
     });
 
   } catch (error) {
-
     console.log("❌ ERROR:", error);
-
-    // duplicate error safe handle
-    if (error.code === 11000) {
-      return res.status(400).json({
-        success: false,
-        message: "Duplicate entry ❌"
-      });
-    }
 
     res.status(500).json({
       success: false,
@@ -98,29 +94,24 @@ router.post("/", async (req, res) => {
   }
 });
 
-
 // ======================
-// 📋 GET ALL STUDENTS
+// 📋 GET ALL
 // ======================
 router.get("/", async (req, res) => {
   try {
 
     const students = await Student.find();
 
-    res.status(200).json({
+    res.json({
       success: true,
       students
     });
 
   } catch (error) {
-    console.log(error);
-
     res.status(500).json({
-      success: false,
-      message: "Server Error ❌"
+      success: false
     });
   }
 });
-
 
 module.exports = router;
