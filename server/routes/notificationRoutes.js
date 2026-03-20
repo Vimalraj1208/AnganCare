@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 
-const Notification = require("../models/notification");
+const Notification = require("../models/Notification");
 
 router.get("/",async(req,res)=>{
 

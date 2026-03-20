@@ -1,0 +1,51 @@
+.mail-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 40px;
+}
+
+.mail-box {
+  width: 500px;
+  background: white;
+  padding: 25px;
+  border-radius: 12px;
+  box-shadow: 0px 5px 20px rgba(0,0,0,0.1);
+}
+
+.mail-box h2 {
+  margin-bottom: 20px;
+}
+
+.mail-field {
+  margin-bottom: 15px;
+  display: flex;
+  flex-direction: column;
+}
+
+.mail-field label {
+  font-weight: 600;
+  margin-bottom: 5px;
+}
+
+.mail-field input,
+.mail-field textarea,
+.mail-field select {
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+}
+
+.send-btn {
+  width: 100%;
+  padding: 12px;
+  background: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.send-btn:hover {
+  background: #45a049;
+}

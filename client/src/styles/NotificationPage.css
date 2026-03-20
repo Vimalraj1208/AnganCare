@@ -1,0 +1,28 @@
+.attendance-container {
+  padding: 40px;
+}
+
+.attendance-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 25px;
+}
+
+.attendance-card {
+  background: #fff;
+  padding: 35px 20px;
+  border-radius: 15px;
+  text-align: center;
+  box-shadow: 0 6px 15px rgba(0,0,0,0.08);
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.attendance-card:hover {
+  transform: translateY(-6px);
+}
+
+.icon {
+  font-size: 35px;
+  margin-bottom: 10px;
+}
