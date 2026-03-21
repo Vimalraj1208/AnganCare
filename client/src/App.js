@@ -9,6 +9,7 @@ import Attendance from "./pages/Attendance";
 import Growth from "./pages/Growth";
 import Report from "./pages/Report";
 import NotificationPage from "./pages/NotificationPage";
+import Settings from "./pages/Settings";
 import Profile from "./pages/Profile";
 import Login from "./pages/Login";
 import TeacherRegister from "./pages/TeacherRegister";
@@ -18,8 +19,6 @@ import Dashboard from "./pages/Dashboard";
 import AttendanceDashboard from "./pages/AttendanceDashboard";
 import FaceCapture from "./pages/FaceCapture";
 import AttendanceMarker from "./pages/AttendanceMarker";
-
-// 🔥 NEW EMAIL PAGE
 import SendNotification from "./pages/SendNotification";
 
 // Components
@@ -28,14 +27,10 @@ import StudentsList from "./components/StudentsList";
 import AIPoseAttendance from "./components/AIPoseAttendance";
 
 function App() {
-
   return (
     <Router>
-
-      {/* Navbar */}
       <Navbar />
 
-      {/* Routes */}
       <Routes>
 
         {/* Main Pages */}
@@ -45,19 +40,20 @@ function App() {
         <Route path="/report" element={<Report />} />
         <Route path="/notification" element={<NotificationPage />} />
         <Route path="/profile" element={<Profile />} />
+        <Route path="/settings" element={<Settings />} />
 
-        {/* 🔥 SEND MAIL PAGE */}
+        {/* Email */}
         <Route path="/send/:type" element={<SendNotification />} />
 
         {/* Dashboard */}
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/attendance-dashboard" element={<AttendanceDashboard />} />
 
-        {/* Authentication */}
+        {/* Auth */}
         <Route path="/login" element={<Login />} />
         <Route path="/teacher-register" element={<TeacherRegister />} />
 
-        {/* Student Management */}
+        {/* Students */}
         <Route path="/add-student" element={<AddStudentModal />} />
         <Route path="/students-list" element={<StudentsList />} />
         <Route path="/face" element={<FaceCapture />} />
@@ -66,12 +62,11 @@ function App() {
         <Route path="/qr" element={<StudentQR />} />
         <Route path="/scan" element={<QRScanner />} />
 
-        {/* AI Attendance */}
+        {/* AI */}
         <Route path="/attendance-marker" element={<AIPoseAttendance />} />
         <Route path="/face-marker" element={<AttendanceMarker />} />
 
       </Routes>
-
     </Router>
   );
 }

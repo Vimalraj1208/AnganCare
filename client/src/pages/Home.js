@@ -1,5 +1,6 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import Lottie from "lottie-react";
 import aiAnimation from "../assets/Robot says hello.json";
 import "../styles/Home.css";
@@ -7,93 +8,79 @@ import Footer from "../components/Footer";
 
 function Home(){
 
-const navigate = useNavigate();
+  const navigate = useNavigate();
+  const { t } = useTranslation();   // 🔥 IMPORTANT
 
-const goLogin = ()=>{
-navigate("/login");
-};
+  const goLogin = () => {
+    navigate("/login");
+  };
 
-return(
+  return(
 
-<div className="home">
+    <div className="home">
 
+      {/* HERO SECTION */}
+      <div className="hero">
 
-{/* HERO SECTION */}
+        <div className="hero-text">
 
-<div className="hero">
+          <h1>{t("hero_title")}</h1>   {/* 🔥 FIX */}
+          <p>{t("hero_sub")}</p>      {/* 🔥 FIX */}
 
-<div className="hero-text">
+          <button
+            className="explore-btn"
+            onClick={goLogin}
+          >
+            {t("explore")}           {/* 🔥 FIX */}
+          </button>
 
-<h1>Smart AI-Based Anganwadi Monitoring System</h1>
+        </div>
 
-<p>AI Powered Child Monitoring System</p>
+        <div className="hero-animation">
 
-<button
-className="explore-btn"
-onClick={goLogin}
->
+          <Lottie
+            animationData={aiAnimation}
+            loop={true}
+            style={{ width: 300 }}
+          />
 
-Explore Now
+        </div>
 
-</button>
+      </div>
 
-</div>
+      {/* ABOUT */}
+      <div className="about">
 
-<div className="hero-animation">
+        <h2>{t("about_title")}</h2>
 
-<Lottie
-animationData={aiAnimation}
-loop={true}
-style={{ width: 300 }}
-/>
+        <p>{t("about_desc")}</p>
 
-</div>
+      </div>
 
-</div>
+      {/* FEATURES */}
+      <div className="features">
 
+        <div className="feature-card" onClick={goLogin}>
+          <h3>{t("feature1_title")}</h3>
+          <p>{t("feature1_desc")}</p>
+        </div>
 
-{/* ABOUT */}
+        <div className="feature-card" onClick={goLogin}>
+          <h3>{t("feature2_title")}</h3>
+          <p>{t("feature2_desc")}</p>
+        </div>
 
-<div className="about">
+        <div className="feature-card" onClick={goLogin}>
+          <h3>{t("feature3_title")}</h3>
+          <p>{t("feature3_desc")}</p>
+        </div>
 
-<h2>About AnganCare</h2>
+      </div>
 
-<p>
+      <Footer/>
 
-AnganCare is an AI-powered smart monitoring system designed to modernize Anganwadi centers.  
-It helps teachers track attendance using face recognition, monitor growth patterns using predictive analytics, and evaluate skill development for early childhood learning.
-
-</p>
-
-</div>
-
-{/* FEATURES */}
-
-<div className="features">
-
-<div className="feature-card" onClick={goLogin}>
-<h3>📷 Smart Attendance Tracking</h3>
-<p>Face recognition attendance</p>
-</div>
-
-<div className="feature-card" onClick={goLogin}>
-<h3>📈 Predictive Growth Analysis</h3>
-<p>Growth monitoring system</p>
-</div>
-
-<div className="feature-card" onClick={goLogin}>
-<h3>🧠 Skill Intelligence Engine</h3>
-<p>Track learning skills</p>
-</div>
-
-</div>
-
-<Footer/>
-
-</div>
-
-);
-
+    </div>
+  );
 }
 
 export default Home;

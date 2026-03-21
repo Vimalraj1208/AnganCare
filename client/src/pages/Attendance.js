@@ -1,90 +1,84 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import "../styles/Dashboard.css";
 
 function Attendance() {
 
-const navigate = useNavigate();
+  const navigate = useNavigate();
+  const { t } = useTranslation();
 
-return (
+  return (
 
-<div className="attendance-page">
+    <div className="attendance-page">
 
-<h2 className="attendance-title">
-Attendance Management
-</h2>
+      <h2 className="attendance-title">
+        {t("attendance_title")}
+      </h2>
 
-<div className="attendance-grid">
+      <div className="attendance-grid">
 
-<div
-className="attendance-card"
-onClick={()=>navigate("/add-student")}
->
+        {/* ADD STUDENT */}
+        <div
+          className="attendance-card"
+          onClick={() => navigate("/add-student")}
+        >
+          <div className="card-icon">👶</div>
 
-<div className="card-icon">👶</div>
+          <h3>{t("add_student")}</h3>
 
-<h3>Add Student</h3>
+          <p>
+            {t("register_child")}
+          </p>
+        </div>
 
-<p>
-Register new child
-</p>
+        {/* ATTENDANCE MARKER */}
+        <div
+          className="attendance-card"
+          onClick={() => navigate("/attendance-marker")}
+        >
+          <div className="card-icon">📷</div>
 
-</div>
+          <h3>{t("attendance_marker")}</h3>
 
+          <p>
+            {t("face_attendance")}
+          </p>
+        </div>
 
-<div
-className="attendance-card"
-onClick={()=>navigate("/attendance-marker")}
->
+        {/* DASHBOARD */}
+        <div
+          className="attendance-card"
+          onClick={() => navigate("/attendance-dashboard")}
+        >
+          <div className="card-icon">📊</div>
 
-<div className="card-icon">📷</div>
+          <h3>{t("dashboard")}</h3>
 
-<h3>Attendance Marker</h3>
+          <p>
+            {t("attendance_stats")}
+          </p>
+        </div>
 
-<p>
-Face recognition attendance
-</p>
+        {/* STUDENT LIST */}
+        <div
+          className="attendance-card"
+          onClick={() => navigate("/students-list")}
+        >
+          <div className="card-icon">📋</div>
 
-</div>
+          <h3>{t("student_list")}</h3>
 
+          <p>
+            {t("view_students")}
+          </p>
+        </div>
 
-<div
-className="attendance-card"
-onClick={()=>navigate("/attendance-dashboard")}
->
+      </div>
 
-<div className="card-icon">📊</div>
+    </div>
 
-<h3>Dashboard</h3>
-
-<p>
-Attendance statistics
-</p>
-
-</div>
-
-
-<div
-className="attendance-card"
-onClick={()=>navigate("/students-list")}
->
-
-<div className="card-icon">📋</div>
-
-<h3>Student List</h3>
-
-<p>
-View registered students
-</p>
-
-</div>
-
-</div>
-
-</div>
-
-
-);
+  );
 
 }
 
