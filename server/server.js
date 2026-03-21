@@ -3,8 +3,14 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 const http = require("http");
 const { Server } = require("socket.io");
+const path = require("path");
 
+// 🔥 MODELS
 const Notification = require("./models/Notification");
+
+// 🔥 ROUTES
+const profileRoutes = require("./routes/profileRoutes");
+const uploadRoute = require("./routes/upload"); // ✅ NEW
 
 const app = express();
 const server = http.createServer(app);
@@ -17,6 +23,9 @@ const io = new Server(server, {
 // 🔥 MIDDLEWARE
 app.use(cors());
 app.use(express.json());
+
+// 🔥 STATIC FOLDER (PHOTO ACCESS)
+app.use("/uploads", express.static("uploads")); // ✅ NEW
 
 // 🔥 DB CONNECT
 mongoose.connect("mongodb://127.0.0.1:27017/angancare")
@@ -32,13 +41,21 @@ io.on("connection", (socket) => {
   });
 });
 
+// ==============================
+// 🔥 PROFILE ROUTE
+// ==============================
+app.use("/api/profile", profileRoutes);
 
 // ==============================
-// 🔥 SAVE NOTIFICATION (EMAIL STYLE)
+// 🔥 PHOTO UPLOAD ROUTE
+// ==============================
+app.use("/api/upload", uploadRoute); // ✅ NEW
+
+// ==============================
+// 🔥 SAVE NOTIFICATION
 // ==============================
 app.post("/api/notify", async (req, res) => {
   try {
-
     const { type, title, msg, from, to } = req.body;
 
     const newNotification = new Notification({
@@ -60,13 +77,11 @@ app.post("/api/notify", async (req, res) => {
   }
 });
 
-
 // ==============================
-// 🔥 GET (ONLY LAST 24 HOURS)
+// 🔥 GET NOTIFICATIONS (24 HOURS)
 // ==============================
 app.get("/api/notifications", async (req, res) => {
   try {
-
     const last24Hours = new Date(Date.now() - 24 * 60 * 60 * 1000);
 
     const data = await Notification.find({
@@ -80,6 +95,12 @@ app.get("/api/notifications", async (req, res) => {
   }
 });
 
+// ==============================
+// 🔥 ROOT TEST
+// ==============================
+app.get("/", (req, res) => {
+  res.send("API WORKING 🚀");
+});
 
 // ==============================
 const PORT = 5000;
