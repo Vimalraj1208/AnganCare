@@ -1,28 +1,111 @@
-.attendance-container {
-  padding: 40px;
+.notification-page {
+  padding: 20px;
+  font-family: Arial, sans-serif;
 }
 
-.attendance-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 25px;
-}
-
-.attendance-card {
-  background: #fff;
-  padding: 35px 20px;
-  border-radius: 15px;
-  text-align: center;
-  box-shadow: 0 6px 15px rgba(0,0,0,0.08);
+.compose-btn {
+  padding: 8px 16px;
+  background-color: #1a73e8;
+  color: white;
+  border: none;
+  border-radius: 4px;
   cursor: pointer;
-  transition: 0.3s;
 }
 
-.attendance-card:hover {
-  transform: translateY(-6px);
+.compose-btn:hover {
+  background-color: #1558b0;
 }
 
-.icon {
-  font-size: 35px;
-  margin-bottom: 10px;
+.inbox {
+  margin-top: 20px;
+}
+
+.inbox-item {
+  border-bottom: 1px solid #ddd;
+  padding: 10px 0;
+}
+
+/* Compose Modal */
+.compose-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0,0,0,0.4);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.compose-container {
+  background-color: white;
+  width: 80%;
+  max-width: 900px;
+  height: 80%;
+  display: flex;
+  flex-direction: column;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.compose-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px;
+  background-color: #f5f5f5;
+  border-bottom: 1px solid #ddd;
+}
+
+.compose-body {
+  display: flex;
+  height: 100%;
+}
+
+.left-panel {
+  flex: 1;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+}
+
+.left-panel label {
+  margin-top: 10px;
+}
+
+.left-panel select,
+.left-panel textarea {
+  margin-top: 5px;
+  padding: 8px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  width: 100%;
+}
+
+.left-panel textarea {
+  resize: none;
+  height: 120px;
+}
+
+.send-btn {
+  margin-top: 15px;
+  padding: 8px 16px;
+  background-color: #1a73e8;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.send-btn:hover {
+  background-color: #1558b0;
+}
+
+.right-panel {
+  flex: 1;
+  padding: 20px;
+  border-left: 1px solid #ddd;
+  background-color: #f9f9f9;
 }

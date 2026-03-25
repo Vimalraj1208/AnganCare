@@ -3,6 +3,8 @@
   "version": "1.0.0",
   "private": true,
   "dependencies": {
+    "@mediapipe/camera_utils": "^0.3.1675466862",
+    "@mediapipe/pose": "^0.5.1675469404",
     "axios": "^1.6.0",
     "face-api.js": "^0.22.2",
     "html5-qrcode": "^2.3.8",
@@ -12,10 +14,12 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-i18next": "^13.5.0",
+    "react-multi-select-component": "^4.3.4",
     "react-router-dom": "^6.20.0",
     "react-scripts": "5.0.1",
+    "react-select": "^5.10.2",
     "react-webcam": "^7.2.0",
-    "socket.io-client": "^4.7.2",
+    "socket.io-client": "^4.8.3",
     "web-vitals": "^5.1.0"
   },
   "scripts": {

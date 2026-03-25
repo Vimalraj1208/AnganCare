@@ -20,7 +20,7 @@
     "face-api.js": "^0.22.2",
     "firebase-admin": "^13.7.0",
     "jsonwebtoken": "^9.0.3",
-    "mongoose": "^9.2.4",
+    "mongoose": "^9.3.2",
     "multer": "^2.1.1",
     "node-fetch": "^3.3.2",
     "pdfkit": "^0.17.2",

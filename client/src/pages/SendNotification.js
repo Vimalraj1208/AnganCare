@@ -11,12 +11,38 @@ function SendNotification() {
     type: "info"
   });
 
+  // 🔥 INPUT CHANGE
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
+  // 🔥 PUSH NOTIFICATION (FREE)
+  const sendPushNotification = () => {
+    if (Notification.permission === "granted") {
+      new Notification(form.title || "AnganCare", {
+        body: form.msg || "New notification",
+        icon: "🔔"
+      });
+    } else {
+      Notification.requestPermission();
+    }
+  };
+
+  // 🔥 WHATSAPP (FREE METHOD)
+  const sendWhatsApp = () => {
+    if (!form.to) return;
+
+    const phone = form.to.replace(/\D/g, ""); // numbers only
+    const message = `${form.title}\n${form.msg}`;
+
+    const url = `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
+    window.open(url, "_blank");
+  };
+
+  // 🔥 SUBMIT
   const handleSubmit = async () => {
 
+    // 👉 Save DB
     await fetch("http://localhost:5000/api/notify", {
       method: "POST",
       headers: {
@@ -24,6 +50,9 @@ function SendNotification() {
       },
       body: JSON.stringify(form)
     });
+
+    // 👉 PUSH
+    sendPushNotification();
 
     alert("✅ Notification Sent");
 
@@ -54,11 +83,11 @@ function SendNotification() {
         </div>
 
         <div className="mail-field">
-          <label>To</label>
+          <label>To (Phone number)</label>
           <input
             type="text"
             name="to"
-            placeholder="parent@mail.com"
+            placeholder="91XXXXXXXXXX"
             value={form.to}
             onChange={handleChange}
           />
@@ -96,8 +125,17 @@ function SendNotification() {
           />
         </div>
 
+        {/* 🔥 BUTTONS */}
         <button className="send-btn" onClick={handleSubmit}>
-          Send 📤
+          Send Notification 🔔
+        </button>
+
+        <button
+          className="send-btn"
+          style={{ marginTop: "10px", background: "#25D366" }}
+          onClick={sendWhatsApp}
+        >
+          Send WhatsApp 💬
         </button>
 
       </div>

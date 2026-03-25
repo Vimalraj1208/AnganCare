@@ -21,6 +21,13 @@ import FaceCapture from "./pages/FaceCapture";
 import AttendanceMarker from "./pages/AttendanceMarker";
 import SendNotification from "./pages/SendNotification";
 
+// 🔥 NEW GROWTH PAGES
+import Physical from "./pages/growth/Physical";
+import Cognitive from "./pages/growth/Cognitive";
+import Motor from "./pages/growth/Motor";
+import Emotional from "./pages/growth/Emotional";
+import Language from "./pages/growth/Language";
+
 // Components
 import AddStudentModal from "./components/AddStudentModal";
 import StudentsList from "./components/StudentsList";
@@ -41,6 +48,13 @@ function App() {
         <Route path="/notification" element={<NotificationPage />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/settings" element={<Settings />} />
+
+        {/* 🔥 GROWTH MODULE ROUTES */}
+        <Route path="/growth/physical" element={<Physical />} />
+        <Route path="/growth/cognitive" element={<Cognitive />} />
+        <Route path="/growth/motor" element={<Motor />} />
+        <Route path="/growth/emotional" element={<Emotional />} />
+        <Route path="/growth/language" element={<Language />} />
 
         {/* Email */}
         <Route path="/send/:type" element={<SendNotification />} />
