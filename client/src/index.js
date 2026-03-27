@@ -5,7 +5,7 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import "./i18n";
 
-// 🔥 SERVICE WORKER IMPORT
+// 🔥 SERVICE WORKER
 import * as serviceWorkerRegistration from './serviceWorkerRegistration';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
@@ -16,7 +16,7 @@ root.render(
   </React.StrictMode>
 );
 
-// 🔥 REGISTER SERVICE WORKER (IMPORTANT)
+// 🔥 REGISTER SERVICE WORKER
 serviceWorkerRegistration.register();
 
 // Performance (optional)

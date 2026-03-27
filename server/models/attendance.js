@@ -9,6 +9,9 @@ const attendanceSchema = new mongoose.Schema({
 
   name: String,
 
+  // 🔥 ADD THIS (for storing student photo)
+  photo: String,
+
   date: {
     type: Date,
     default: Date.now

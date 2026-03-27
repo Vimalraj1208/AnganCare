@@ -9,7 +9,7 @@ import Footer from "../components/Footer";
 function Home(){
 
   const navigate = useNavigate();
-  const { t } = useTranslation();   // 🔥 IMPORTANT
+  const { t } = useTranslation();
 
   const goLogin = () => {
     navigate("/login");
@@ -24,14 +24,14 @@ function Home(){
 
         <div className="hero-text">
 
-          <h1>{t("hero_title")}</h1>   {/* 🔥 FIX */}
-          <p>{t("hero_sub")}</p>      {/* 🔥 FIX */}
+          <h1>{t("hero_title")}</h1>
+          <p>{t("hero_sub")}</p>
 
           <button
             className="explore-btn"
             onClick={goLogin}
           >
-            {t("explore")}           {/* 🔥 FIX */}
+            {t("explore")}
           </button>
 
         </div>

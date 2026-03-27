@@ -1,55 +1,29 @@
-import React, { useEffect, useState } from "react";
+const express = require("express");
+const router = express.Router();
+const multer = require("multer");
 
-function StudentsList() {
+// STORAGE CONFIG
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, "uploads/");
+  },
+  filename: (req, file, cb) => {
+    cb(null, Date.now() + ".jpg");
+  }
+});
 
-  const [students, setStudents] = useState([]);
+const upload = multer({ storage });
 
-  // ✅ FETCH STUDENTS
-  useEffect(() => {
-    fetch("http://localhost:5000/api/students")
-      .then(res => res.json())
-      .then(data => {
-        // IMPORTANT FIX 🔥
-        setStudents(data.students || []);
-      })
-      .catch(err => console.log(err));
-  }, []);
+// API
+router.post("/", upload.single("image"), (req, res) => {
 
-  return (
-    <div style={{ padding: "20px" }}>
-      <h2>Students List</h2>
+  console.log("🔥 FILE UPLOADED");
 
-      {students.length === 0 ? (
-        <p>No students found</p>
-      ) : (
-        <table border="1" cellPadding="10" style={{ width: "100%", marginTop: "20px" }}>
-          <thead>
-            <tr>
-              <th>Aadhaar</th>
-              <th>Name</th>
-              <th>Father</th>
-              <th>Mother</th>
-              <th>Age</th>
-              <th>Gender</th>
-            </tr>
-          </thead>
+  res.json({
+    message: "File uploaded",
+    file: req.file
+  });
 
-          <tbody>
-            {students.map((s, index) => (
-              <tr key={index}>
-                <td>{s.aadhaar}</td>
-                <td>{s.name}</td>
-                <td>{s.fatherName}</td>
-                <td>{s.motherName}</td>
-                <td>{s.age}</td>
-                <td>{s.gender}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      )}
-    </div>
-  );
-}
+});
 
-export default StudentsList;
+module.exports = router;

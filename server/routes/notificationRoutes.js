@@ -3,25 +3,31 @@ const router = express.Router();
 
 const Notification = require("../models/Notification");
 
-router.get("/",async(req,res)=>{
+// ==============================
+// 📥 GET ALL NOTIFICATIONS
+// ==============================
+router.get("/", async (req, res) => {
+  try {
 
-try{
+    const notifications = await Notification
+      .find()
+      .sort({ createdAt: -1 }); // 🔥 correct field
 
-const notifications = await Notification.find().sort({date:-1});
+    res.json({
+      success: true,
+      data: notifications
+    });
 
-res.json({
-success:true,
-data:notifications
-});
+  } catch (err) {
 
-}catch(err){
+    console.log(err);
 
-res.status(500).json({
-success:false
-});
+    res.status(500).json({
+      success: false,
+      message: "Server Error ❌"
+    });
 
-}
-
+  }
 });
 
 module.exports = router;

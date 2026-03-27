@@ -9,7 +9,7 @@ const QRCode = require("qrcode");
 router.post("/", async (req, res) => {
   try {
 
-    console.log("🔥 STUDENT API HIT");
+    console.log("🔥 STUDENT API HIT", req.body);
 
     const {
       aadhaar,
@@ -46,7 +46,7 @@ router.post("/", async (req, res) => {
       });
     }
 
-    // ✅ STEP 1: create student (without QR)
+    // ✅ STEP 1: create student
     const student = new Student({
       aadhaar,
       name,
@@ -67,10 +67,8 @@ router.post("/", async (req, res) => {
     // ✅ STEP 2: save first
     await student.save();
 
-    // ✅ STEP 3: generate QR using _id
-    const qrCode = await QRCode.toDataURL(
-      `STUDENT_ID:${student._id}`
-    );
+    // ✅ STEP 3: generate QR
+    const qrCode = await QRCode.toDataURL(`STUDENT_ID:${student._id}`);
 
     // ✅ STEP 4: update QR
     student.qrCode = qrCode;
@@ -85,6 +83,7 @@ router.post("/", async (req, res) => {
     });
 
   } catch (error) {
+
     console.log("❌ ERROR:", error);
 
     res.status(500).json({
@@ -94,8 +93,9 @@ router.post("/", async (req, res) => {
   }
 });
 
+
 // ======================
-// 📋 GET ALL
+// 📋 GET ALL STUDENTS
 // ======================
 router.get("/", async (req, res) => {
   try {
@@ -108,8 +108,12 @@ router.get("/", async (req, res) => {
     });
 
   } catch (error) {
+
+    console.log(error);
+
     res.status(500).json({
-      success: false
+      success: false,
+      message: "Server Error ❌"
     });
   }
 });

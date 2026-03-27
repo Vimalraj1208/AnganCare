@@ -1,20 +1,24 @@
 const express = require("express");
 const router = express.Router();
+
 const Attendance = require("../models/attendance");
 const Student = require("../models/student");
 
-
 // ==============================
-// ✅ MARK ATTENDANCE (POST)
+// ✅ MARK ATTENDANCE (QR + ID)
 // ==============================
 router.post("/mark", async (req, res) => {
   try {
 
-    console.log("🔥 ATTENDANCE API HIT");
+    console.log("🔥 ATTENDANCE API HIT", req.body);
 
-    const { studentId } = req.body;
+    let { studentId, qrData } = req.body;
 
-    // 🔴 check studentId
+    // 🔥 support QR format
+    if (!studentId && qrData) {
+      studentId = qrData.replace("STUDENT_ID:", "").trim();
+    }
+
     if (!studentId) {
       return res.status(400).json({
         success: false,
@@ -32,9 +36,9 @@ router.post("/mark", async (req, res) => {
       });
     }
 
-    // 📅 today date (no duplicate)
+    // 📅 prevent duplicate (same day)
     const today = new Date();
-    today.setHours(0,0,0,0);
+    today.setHours(0, 0, 0, 0);
 
     const alreadyMarked = await Attendance.findOne({
       studentId,
@@ -51,16 +55,14 @@ router.post("/mark", async (req, res) => {
     // 📝 CREATE ATTENDANCE
     const attendance = new Attendance({
       studentId,
-      name: student.name
+      name: student.name,
+      photo: student.photo   // 🔥 include photo
     });
-
-    console.log("📝 Before Save:", attendance);
 
     await attendance.save();
 
-    console.log("🔥 SAVED:", attendance);
+    console.log("✅ Attendance Saved");
 
-    // ✅ RESPONSE
     res.status(201).json({
       success: true,
       message: "Attendance Marked ✅",
@@ -77,7 +79,6 @@ router.post("/mark", async (req, res) => {
     });
   }
 });
-
 
 // ==============================
 // 📊 GET ALL ATTENDANCE
@@ -102,6 +103,5 @@ router.get("/", async (req, res) => {
     });
   }
 });
-
 
 module.exports = router;

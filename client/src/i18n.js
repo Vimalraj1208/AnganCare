@@ -31,6 +31,7 @@ i18n
           phone: "Phone",
           address: "Address",
           gender: "Gender",
+          change_password: "Change Password",
 
           update: "Update Profile",
           save_offline: "Save Offline",
@@ -76,7 +77,7 @@ i18n
           student_list: "Student List",
           view_students: "View registered students",
 
-          // 🔔 NOTIFICATION (🔥 NEW ADD)
+          // 🔔 NOTIFICATION
           notifications: "Notifications",
           information: "Information",
           food: "Food",
@@ -108,6 +109,7 @@ i18n
           phone: "தொலைபேசி",
           address: "முகவரி",
           gender: "பாலினம்",
+          change_password: "கடவுச்சொல் மாற்றம்",
 
           update: "புதுப்பிக்கவும்",
           save_offline: "ஆஃப்லைனில் சேமிக்கவும்",
@@ -153,7 +155,7 @@ i18n
           student_list: "மாணவர் பட்டியல்",
           view_students: "பதிவு செய்யப்பட்ட மாணவர்கள்",
 
-          // 🔔 NOTIFICATION (🔥 NEW ADD)
+          // 🔔 NOTIFICATION
           notifications: "அறிவிப்புகள்",
           information: "தகவல்",
           food: "உணவு",

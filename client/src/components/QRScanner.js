@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { QrReader } from "react-qr-reader";
+import successSound from "../assets/success.wav";
 
 function QRScanner() {
 
@@ -22,7 +23,13 @@ function QRScanner() {
       console.log("📡 Response:", data);
 
       if (data.success) {
+
+        // 🔊 play sound
+        const audio = new Audio(successSound);
+        audio.play();
+
         alert("✅ Attendance Marked");
+
       } else {
         alert("❌ " + data.message);
       }

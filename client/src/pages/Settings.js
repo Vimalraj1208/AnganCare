@@ -3,7 +3,7 @@ import axios from "axios";
 import "../styles/Settings.css";
 import { useTranslation } from "react-i18next";
 
-const Settings = () => {
+function Settings() {
 
   const { t, i18n } = useTranslation();
 
@@ -16,20 +16,25 @@ const Settings = () => {
     photo: ""
   });
 
+  const [password, setPassword] = useState({
+    current: "",
+    newPass: "",
+    confirm: ""
+  });
+
   const [photoFile, setPhotoFile] = useState(null);
   const [preview, setPreview] = useState("");
 
   const userId = localStorage.getItem("userId");
 
-  // 🔥 SET LANGUAGE ON LOAD
+  // 🌐 Language load
   useEffect(() => {
     const savedLang = localStorage.getItem("lang") || "en";
     i18n.changeLanguage(savedLang);
   }, [i18n]);
 
-  // 🔥 FETCH PROFILE
+  // 🔥 Fetch profile
   useEffect(() => {
-
     if (!userId) return;
 
     axios.get(`http://localhost:5000/api/profile/${userId}`)
@@ -41,28 +46,23 @@ const Settings = () => {
 
   }, [userId]);
 
-  // 🔥 INPUT
+  // 🔥 Input change
   const handleChange = (e) => {
     setProfile({ ...profile, [e.target.name]: e.target.value });
   };
 
-  // 🔥 PHOTO SELECT
+  // 📸 Photo select
   const handlePhoto = (e) => {
     const file = e.target.files[0];
-
     if (!file) return;
 
     setPhotoFile(file);
     setPreview(URL.createObjectURL(file));
   };
 
-  // 🔥 UPLOAD PHOTO
+  // 📤 Upload photo
   const uploadPhoto = async () => {
-
-    if (!photoFile) {
-      alert("Select a photo");
-      return;
-    }
+    if (!photoFile) return alert("Select a photo");
 
     const formData = new FormData();
     formData.append("photo", photoFile);
@@ -72,22 +72,16 @@ const Settings = () => {
       const imageUrl = res.data.imageUrl;
 
       setProfile(prev => ({ ...prev, photo: imageUrl }));
-
       alert("Photo Uploaded ✅");
 
-    } catch (err) {
-      console.log(err);
+    } catch {
       alert("Upload Failed ❌");
     }
   };
 
-  // 🔥 UPDATE PROFILE
+  // 🔥 Update profile
   const updateProfile = async () => {
-
-    if (!userId) {
-      alert("Login first");
-      return;
-    }
+    if (!userId) return alert("Login first");
 
     try {
       await axios.post("http://localhost:5000/api/profile", {
@@ -97,48 +91,57 @@ const Settings = () => {
 
       alert("Updated ✅");
 
-    } catch (err) {
-      console.log(err);
+    } catch {
       alert("Update Failed ❌");
     }
   };
 
-  // 🔥 OFFLINE SAVE
+  // 🔐 Change password
+  const changePassword = async () => {
+    if (password.newPass !== password.confirm) {
+      return alert("Password mismatch");
+    }
+
+    try {
+      await axios.post(`http://localhost:5000/api/change-password/${userId}`, password);
+      alert("Password Changed 🔐");
+    } catch {
+      alert("Error ❌");
+    }
+  };
+
+  // 💾 Offline save
   const saveOffline = () => {
     localStorage.setItem("offlineProfile", JSON.stringify({
       ...profile,
       userId
     }));
-
     alert("Saved Offline 💾");
   };
 
-  // 🔥 SYNC
+  // 🔄 Sync
   const syncData = async () => {
-
     const data = JSON.parse(localStorage.getItem("offlineProfile"));
 
-    if (!data) {
-      alert("No offline data");
-      return;
-    }
+    if (!data) return alert("No offline data");
 
     try {
       await axios.post("http://localhost:5000/api/profile", data);
-
       localStorage.removeItem("offlineProfile");
-
       alert("Synced 🔄");
-
-    } catch (err) {
-      console.log(err);
+    } catch {
       alert("Sync Failed ❌");
     }
   };
 
-  // 🔥 UI
   return (
     <div className="container">
+
+      {/* 🌍 Language */}
+      <div style={{ textAlign: "right" }}>
+        <button onClick={() => i18n.changeLanguage("en")}>EN</button>
+        <button onClick={() => i18n.changeLanguage("ta")}>TA</button>
+      </div>
 
       <h2>{t("settings")}</h2>
 
@@ -151,11 +154,7 @@ const Settings = () => {
         <img
           src={preview}
           alt="preview"
-          style={{
-            width: "100px",
-            marginTop: "10px",
-            borderRadius: "10px"
-          }}
+          style={{ width: "100px", marginTop: "10px", borderRadius: "10px" }}
         />
       )}
 
@@ -168,60 +167,39 @@ const Settings = () => {
 
       <div className="form-box">
 
-        <input
-          name="name"
-          value={profile.name || ""}
-          onChange={handleChange}
-          placeholder={t("name")}
-        />
+        <input name="name" value={profile.name || ""} onChange={handleChange} placeholder={t("name")} />
+        <input name="email" value={profile.email || ""} onChange={handleChange} placeholder={t("email")} />
+        <input name="phone" value={profile.phone || ""} onChange={handleChange} placeholder={t("phone")} />
+        <input name="address" value={profile.address || ""} onChange={handleChange} placeholder={t("address")} />
 
-        <input
-          name="email"
-          value={profile.email || ""}
-          onChange={handleChange}
-          placeholder={t("email")}
-        />
-
-        <input
-          name="phone"
-          value={profile.phone || ""}
-          onChange={handleChange}
-          placeholder={t("phone")}
-        />
-
-        <input
-          name="address"
-          value={profile.address || ""}
-          onChange={handleChange}
-          placeholder={t("address")}
-        />
-
-        <select
-          name="gender"
-          value={profile.gender || ""}
-          onChange={handleChange}
-        >
+        <select name="gender" value={profile.gender || ""} onChange={handleChange}>
           <option value="">{t("gender")}</option>
           <option value="Male">Male</option>
           <option value="Female">Female</option>
         </select>
 
-        <button onClick={updateProfile}>
-          {t("update")}
-        </button>
-
-        <button onClick={saveOffline}>
-          {t("save_offline")}
-        </button>
-
-        <button onClick={syncData}>
-          {t("sync")}
-        </button>
+        <button onClick={updateProfile}>{t("update")}</button>
+        <button onClick={saveOffline}>{t("save_offline")}</button>
+        <button onClick={syncData}>{t("sync")}</button>
 
       </div>
 
+      {/* 🔐 PASSWORD */}
+      <h3>{t("change_password")}</h3>
+
+      <input type="password" placeholder="Current Password"
+        onChange={(e) => setPassword({ ...password, current: e.target.value })} />
+
+      <input type="password" placeholder="New Password"
+        onChange={(e) => setPassword({ ...password, newPass: e.target.value })} />
+
+      <input type="password" placeholder="Confirm Password"
+        onChange={(e) => setPassword({ ...password, confirm: e.target.value })} />
+
+      <button onClick={changePassword}>Change Password</button>
+
     </div>
   );
-};
+}
 
 export default Settings;

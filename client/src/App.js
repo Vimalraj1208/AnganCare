@@ -21,7 +21,7 @@ import FaceCapture from "./pages/FaceCapture";
 import AttendanceMarker from "./pages/AttendanceMarker";
 import SendNotification from "./pages/SendNotification";
 
-// 🔥 NEW GROWTH PAGES
+// 🔥 Growth Pages
 import Physical from "./pages/growth/Physical";
 import Cognitive from "./pages/growth/Cognitive";
 import Motor from "./pages/growth/Motor";
@@ -36,6 +36,8 @@ import AIPoseAttendance from "./components/AIPoseAttendance";
 function App() {
   return (
     <Router>
+
+      {/* Navbar */}
       <Navbar />
 
       <Routes>
@@ -49,14 +51,14 @@ function App() {
         <Route path="/profile" element={<Profile />} />
         <Route path="/settings" element={<Settings />} />
 
-        {/* 🔥 GROWTH MODULE ROUTES */}
+        {/* Growth Modules */}
         <Route path="/growth/physical" element={<Physical />} />
         <Route path="/growth/cognitive" element={<Cognitive />} />
         <Route path="/growth/motor" element={<Motor />} />
         <Route path="/growth/emotional" element={<Emotional />} />
         <Route path="/growth/language" element={<Language />} />
 
-        {/* Email */}
+        {/* Notifications */}
         <Route path="/send/:type" element={<SendNotification />} />
 
         {/* Dashboard */}
@@ -76,11 +78,12 @@ function App() {
         <Route path="/qr" element={<StudentQR />} />
         <Route path="/scan" element={<QRScanner />} />
 
-        {/* AI */}
+        {/* AI Attendance */}
         <Route path="/attendance-marker" element={<AIPoseAttendance />} />
         <Route path="/face-marker" element={<AttendanceMarker />} />
 
       </Routes>
+
     </Router>
   );
 }

@@ -9,7 +9,6 @@ function Attendance() {
   const { t } = useTranslation();
 
   return (
-
     <div className="attendance-page">
 
       <h2 className="attendance-title">
@@ -27,9 +26,7 @@ function Attendance() {
 
           <h3>{t("add_student")}</h3>
 
-          <p>
-            {t("register_child")}
-          </p>
+          <p>{t("register_child")}</p>
         </div>
 
         {/* ATTENDANCE MARKER */}
@@ -41,9 +38,7 @@ function Attendance() {
 
           <h3>{t("attendance_marker")}</h3>
 
-          <p>
-            {t("face_attendance")}
-          </p>
+          <p>{t("face_attendance")}</p>
         </div>
 
         {/* DASHBOARD */}
@@ -55,9 +50,7 @@ function Attendance() {
 
           <h3>{t("dashboard")}</h3>
 
-          <p>
-            {t("attendance_stats")}
-          </p>
+          <p>{t("attendance_stats")}</p>
         </div>
 
         {/* STUDENT LIST */}
@@ -69,17 +62,13 @@ function Attendance() {
 
           <h3>{t("student_list")}</h3>
 
-          <p>
-            {t("view_students")}
-          </p>
+          <p>{t("view_students")}</p>
         </div>
 
       </div>
 
     </div>
-
   );
-
 }
 
 export default Attendance;

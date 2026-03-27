@@ -45,7 +45,6 @@ function AddStudentModal() {
 
   const registerStudent = async () => {
     try {
-
       const res = await fetch("http://localhost:5000/api/students", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -84,7 +83,6 @@ function AddStudentModal() {
 
         <div className="student-grid">
 
-          {/* ✅ VALUE ADDED */}
           <input name="aadhaar" value={form.aadhaar} placeholder="Aadhaar Number" onChange={handleChange}/>
           <input name="name" value={form.name} placeholder="Full Name" onChange={handleChange}/>
 

@@ -3,33 +3,49 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 const http = require("http");
 const { Server } = require("socket.io");
+const dotenv = require("dotenv");
 
-const Notification = require("./models/Notification");
+dotenv.config();
 
 const app = express();
 const server = http.createServer(app);
 
-const io = new Server(server, { cors: { origin: "*" } });
+// 🔥 SOCKET.IO
+const io = new Server(server, {
+  cors: { origin: "*" }
+});
 
+// 🔥 MODELS
+const Notification = require("./models/Notification");
+
+// 🔥 ROUTES
+const studentRoutes = require("./routes/studentRoutes");
+const attendanceRoutes = require("./routes/attendanceRoutes");
+const faceScanRoutes = require("./routes/faceScan"); // ✅ FIXED NAME
+
+// 🔥 MIDDLEWARE
 app.use(cors());
 app.use(express.json());
 
-// MongoDB connect
+// 🔥 MONGODB CONNECT
 mongoose.connect("mongodb://127.0.0.1:27017/angancare")
   .then(() => console.log("✅ MongoDB Connected"))
-  .catch(err => console.log(err));
+  .catch(err => console.log("❌ DB Error:", err));
 
-// Socket.io
+// 🔥 SOCKET CONNECTION
 io.on("connection", (socket) => {
   console.log("⚡ User connected");
-  socket.on("disconnect", () => console.log("❌ User disconnected"));
+
+  socket.on("disconnect", () => {
+    console.log("❌ User disconnected");
+  });
 });
 
 // ==============================
-// 🔥 Notification Routes
+// 🔔 NOTIFICATION APIs
 // ==============================
 
-// Send notification
+// ➕ SEND NOTIFICATION
 app.post("/api/notify", async (req, res) => {
   try {
     const { type, message, from, to } = req.body;
@@ -43,16 +59,19 @@ app.post("/api/notify", async (req, res) => {
     });
 
     await newNotification.save();
+
+    // 🔥 REALTIME SEND
     io.emit("new_notification", newNotification);
 
     res.json({ success: true, notification: newNotification });
+
   } catch (err) {
     console.log(err);
     res.status(500).json({ error: "Error saving notification" });
   }
 });
 
-// Get all notifications
+// 📥 GET NOTIFICATIONS
 app.get("/api/notifications", async (req, res) => {
   try {
     const data = await Notification.find().sort({ createdAt: -1 });
@@ -62,8 +81,31 @@ app.get("/api/notifications", async (req, res) => {
   }
 });
 
-// Test
-app.get("/", (req, res) => res.send("API WORKING 🚀"));
+// ==============================
+// 📦 OTHER ROUTES
+// ==============================
+
+app.use("/api/students", studentRoutes);
+app.use("/api/attendance", attendanceRoutes);
+app.use("/api/faceScan", faceScanRoutes);
+
+// 🔥 STATIC UPLOADS
+app.use("/uploads", express.static("uploads"));
+
+// ==============================
+// ROOT
+// ==============================
+
+app.get("/", (req, res) => {
+  res.send("🚀 API WORKING");
+});
+
+// ==============================
+// START SERVER
+// ==============================
 
 const PORT = 5000;
-server.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
+
+server.listen(PORT, () => {
+  console.log(`🔥 Server running on port ${PORT}`);
+});
